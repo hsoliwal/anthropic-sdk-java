@@ -1,0 +1,11 @@
+type: specs.openrewrite.org/v1beta/recipe
+name: com.synexia.m3scale.anthropic.JavaImportAtomization
+displayName: Atomize Java imports without changing contracts
+description: >-
+  Remove provably unused Java imports and normalize remaining imports.
+  Must be previewed per file, applied only to selected Java sources,
+  and accepted only with compilation, tests and API-diff evidence.
+recipeList:
+  - org.openrewrite.java.RemoveUnusedImports
+  - org.openrewrite.java.OrderImports:
+      removeUnused: false
