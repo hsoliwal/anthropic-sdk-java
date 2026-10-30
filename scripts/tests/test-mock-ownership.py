@@ -11,7 +11,7 @@ TEST_SCRIPT = Path(__file__).resolve().parents[1] / "test"
 
 
 class MockOwnershipTests(unittest.TestCase):
-    def invoke(self, *, wrong_listener=False, existing_healthy=False, override=False):
+    def invoke(self, *, wrong_listener=False, existing_healthy=False, override=False, startup_failure=False):
         with TemporaryDirectory() as directory:
             root = Path(directory)
             (root / "scripts").mkdir()
@@ -23,6 +23,7 @@ class MockOwnershipTests(unittest.TestCase):
             )
             (root / "scripts/mock").write_text(
                 '#!/usr/bin/env bash\n'
+                'if [[ "${MOCK_FAIL:-}" == yes ]]; then exit 9; fi\n'
                 'touch .mock-started\n'
             )
             (root / "gradlew").write_text(
@@ -44,6 +45,7 @@ class MockOwnershipTests(unittest.TestCase):
             environment["TEST_API_BASE_URL"] = "http://example.invalid" if override else ""
             environment["STEADY_HEALTHY"] = "yes" if existing_healthy else "no"
             environment["WRONG_LISTENER"] = "yes" if wrong_listener else "no"
+            environment["MOCK_FAIL"] = "yes" if startup_failure else "no"
             listener = Popen(["sleep", "60"])
             try:
                 environment["LISTENER_PID"] = str(listener.pid)
@@ -60,6 +62,13 @@ class MockOwnershipTests(unittest.TestCase):
         result, alive, ran, spawned = self.invoke(wrong_listener=True)
         self.assertNotEqual(result.returncode, 0)
         self.assertTrue(alive, "an unrelated listener must survive startup failure")
+        self.assertFalse(ran)
+        self.assertFalse(spawned)
+
+    def test_failed_mock_launch_does_not_register_cleanup(self):
+        result, alive, ran, spawned = self.invoke(startup_failure=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertTrue(alive)
         self.assertFalse(ran)
         self.assertFalse(spawned)
 
