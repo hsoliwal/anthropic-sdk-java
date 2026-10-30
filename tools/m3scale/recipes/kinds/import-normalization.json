@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "import-normalization",
+  "title": "Normalize Java imports with OpenRewrite",
+  "mode": "proposal-only",
+  "autoApply": false,
+  "dependsOn": [
+    "atomize"
+  ],
+  "instructions": [
+    "Use the existing com.synexia.m3scale.anthropic.JavaImportAtomization OpenRewrite recipe for Java only.",
+    "Do not apply untested imports transformations to Kotlin or generated sources."
+  ],
+  "gates": [
+    "source fingerprint unchanged",
+    "explicit diff review",
+    "lint and compile",
+    "regression tests",
+    "public API and behavior comparison"
+  ]
+}

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>M3-SCALE: one Chrome AI call per source file</title>
+  <style>
+    body { font: 16px system-ui, sans-serif; max-width: 48rem; margin: 3rem auto; padding: 0 1rem; line-height: 1.6 }
+    button, input { font: inherit; padding: .5rem }
+    button:disabled { opacity: .5 }
+    #status { white-space: pre-wrap; background: #f3f3f3; padding: 1rem; overflow-wrap: anywhere }
+  </style>
+</head>
+<body>
+  <h1>M3-SCALE / Chrome built-in AI</h1>
+  <p>Local, file-by-file proposals only. Select one job exported by <code>onecall.py prepare</code>.
+    No SDK source files are written. A failed prompt still consumes the one-call budget.</p>
+  <label for="job">Prepared job JSON</label>
+  <input id="job" type="file" accept="application/json,.json">
+  <p><button id="start" disabled>Generate one proposal</button></p>
+  <p id="status" role="status">Choose a file to begin.</p>
+  <script type="module" src="./app.mjs"></script>
+</body>
+</html>

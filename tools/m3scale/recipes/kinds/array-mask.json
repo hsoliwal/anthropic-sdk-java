@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "array-mask",
+  "title": "Optimize collections with primitive arrays offsets and bit masks",
+  "mode": "proposal-only",
+  "autoApply": false,
+  "dependsOn": [
+    "spec-implementation"
+  ],
+  "instructions": [
+    "Specify index bounds, offset arithmetic, sparse states, aliasing and memory ownership.",
+    "Provide baseline and optimized complexity, representative benchmarks, and equivalence tests."
+  ],
+  "gates": [
+    "source fingerprint unchanged",
+    "explicit diff review",
+    "lint and compile",
+    "regression tests",
+    "public API and behavior comparison"
+  ]
+}

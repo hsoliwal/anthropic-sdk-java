@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "split-class",
+  "title": "Split long classes by responsibility",
+  "mode": "proposal-only",
+  "autoApply": false,
+  "dependsOn": [
+    "spec-implementation"
+  ],
+  "instructions": [
+    "Propose internal component boundaries and delegating façade without changing binary API.",
+    "Do not move serialization metadata or generated DTOs without schema evidence."
+  ],
+  "gates": [
+    "source fingerprint unchanged",
+    "explicit diff review",
+    "lint and compile",
+    "regression tests",
+    "public API and behavior comparison"
+  ]
+}

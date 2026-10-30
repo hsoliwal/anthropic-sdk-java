@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "algorithm-donor",
+  "title": "Evaluate candidate algorithms from categorized donors",
+  "mode": "proposal-only",
+  "autoApply": false,
+  "dependsOn": [
+    "patternize",
+    "spec-implementation"
+  ],
+  "instructions": [
+    "Classify problem by operation, constraints, complexity, allocation and data characteristics.",
+    "Treat GitHub, LeetCode, HackerRank and GeeksforGeeks as research leads; respect licensing and do not copy solutions.",
+    "Benchmark candidates on representative inputs and preserve interface contracts."
+  ],
+  "gates": [
+    "source fingerprint unchanged",
+    "explicit diff review",
+    "lint and compile",
+    "regression tests",
+    "public API and behavior comparison"
+  ]
+}

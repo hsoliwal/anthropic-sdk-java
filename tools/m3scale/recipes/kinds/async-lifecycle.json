@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "async-lifecycle",
+  "title": "Preserve future and asynchronous stream contracts",
+  "mode": "proposal-only",
+  "autoApply": false,
+  "dependsOn": [
+    "spec-implementation"
+  ],
+  "instructions": [
+    "Specify backpressure, cancellation, exactly-once completion and executor rejection behavior.",
+    "Preserve thread-safety, error unwrapping, close semantics and ordering."
+  ],
+  "gates": [
+    "source fingerprint unchanged",
+    "explicit diff review",
+    "lint and compile",
+    "regression tests",
+    "public API and behavior comparison"
+  ]
+}
