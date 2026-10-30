@@ -13,12 +13,13 @@ function steady_is_running() {
   bash scripts/steady-health "http://127.0.0.1:4010/_x-steady/health" >/dev/null 2>&1
 }
 
-kill_server_on_port() {
-  pids=$(lsof -t -i tcp:"$1" -sTCP:LISTEN || echo "")
-  for pid in $pids; do
-    kill "$pid"
-    echo "Stopped process $pid on port $1."
-  done
+stop_owned_mock() {
+  local pid="$1"
+  # Never kill a PID that no longer owns the Steady listening socket.
+  if lsof -a -p "$pid" -i tcp:4010 -sTCP:LISTEN >/dev/null 2>&1; then
+    kill "$pid" || true
+    echo "Stopped owned mock process $pid on port 4010."
+  fi
 }
 
 function is_overriding_api_base_url() {
@@ -26,11 +27,25 @@ function is_overriding_api_base_url() {
 }
 
 if ! is_overriding_api_base_url && ! steady_is_running ; then
-  # When we exit this script, make sure to kill the background mock server process
-  trap 'kill_server_on_port 4010' EXIT
+  # A failing health probe is not proof the listening process belongs to us.
+  # Refuse to replace or kill any listener we did not start.
+  if ! command -v lsof >/dev/null 2>&1; then
+    echo "ERROR: lsof is required to track and clean up the mock process" >&2
+    exit 1
+  fi
+  if lsof -t -i tcp:4010 -sTCP:LISTEN >/dev/null 2>&1; then
+    echo "ERROR: Port 4010 is occupied by a listener with an unhealthy Steady probe" >&2
+    exit 1
+  fi
 
-  # Start the dev server
+  # Do not register cleanup until our own server has started successfully.
   ./scripts/mock --daemon
+  owned_mock_pid=$(lsof -t -i tcp:4010 -sTCP:LISTEN | head -n 1)
+  if [[ -z "$owned_mock_pid" ]]; then
+    echo "ERROR: Mock startup succeeded but its listener PID was not found" >&2
+    exit 1
+  fi
+  trap 'stop_owned_mock "$owned_mock_pid"' EXIT
 fi
 
 if is_overriding_api_base_url ; then
