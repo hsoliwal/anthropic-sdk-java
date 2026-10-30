@@ -30,7 +30,7 @@ if [ "$1" == "--daemon" ]; then
   # Wait for server to come online via health endpoint (max 30s)
   echo -n "Waiting for server"
   attempts=0
-  while ! curl --silent --fail "http://127.0.0.1:4010/_x-steady/health" >/dev/null 2>&1; do
+  while ! bash scripts/steady-health "http://127.0.0.1:4010/_x-steady/health" >/dev/null 2>&1; do
     if ! kill -0 $! 2>/dev/null; then
       echo
       cat .stdy.log
