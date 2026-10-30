@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Only a successful health response means the Steady mock server is ready.
+set -euo pipefail
+
+if [[ $# -ne 1 ]]; then
+  echo "Usage: bash scripts/steady-health URL" >&2
+  exit 2
+fi
+
+code=$(curl --silent --show-error --max-time 3 --output /dev/null --write-out '%{http_code}' "$1") || exit 1
+[[ "$code" == 2?? ]]

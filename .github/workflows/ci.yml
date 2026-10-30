@@ -108,6 +108,9 @@ jobs:
           # Required for configuration-cache data to be saved/restored across CI runs.
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
+      - name: Verify Steady mock health probe
+        run: python3 scripts/tests/test-steady-health.py
+
       - name: Run tests
         run: ./scripts/test
 
