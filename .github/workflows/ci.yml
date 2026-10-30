@@ -13,6 +13,8 @@ on:
     branches-ignore:
       - 'stl-preview-head/**'
       - 'stl-preview-base/**'
+  # Manual runs are useful when a new fork has no recorded workflow runs yet.
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref == 'refs/heads/main' && github.sha || github.ref }}
@@ -25,7 +27,7 @@ jobs:
     timeout-minutes: 15
     name: lint
     runs-on: ${{ github.repository == 'anthropics/anthropic-sdk-java' && 'ubuntu-latest-16core' || 'ubuntu-latest' }}
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.fork
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork || github.repository != 'anthropics/anthropic-sdk-java'
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -44,6 +46,9 @@ jobs:
           # Required for configuration-cache data to be saved/restored across CI runs.
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
+      - name: Verify lint runner arguments
+        run: python3 scripts/tests/test-lint-runner.py
+
       - name: Run lints
         run: ./scripts/lint
 
@@ -56,7 +61,7 @@ jobs:
       contents: read
       id-token: write
     runs-on: ${{ github.repository == 'anthropics/anthropic-sdk-java' && 'ubuntu-latest-16core' || 'ubuntu-latest' }}
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.fork
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork || github.repository != 'anthropics/anthropic-sdk-java'
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -84,7 +89,7 @@ jobs:
     timeout-minutes: 30
     name: test
     runs-on: ${{ github.repository == 'anthropics/anthropic-sdk-java' && 'ubuntu-latest-16core' || 'ubuntu-latest' }}
-    if: github.event_name == 'push' || github.event.pull_request.head.repo.fork
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.fork || github.repository != 'anthropics/anthropic-sdk-java'
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
@@ -121,7 +126,9 @@ jobs:
     if: |-
       (github.event_name == 'push' &&
        !startsWith(github.ref, 'refs/heads/release-please--')) ||
-      github.event.pull_request.head.repo.fork
+      github.event.pull_request.head.repo.fork ||
+      (github.event_name == 'pull_request' && github.repository != 'anthropics/anthropic-sdk-java') ||
+      github.event_name == 'workflow_dispatch'
     steps:
       # fetch-depth: 0 fetches full commit history (all branches and
       # tags, so the base ref is available) so `git merge-base`
