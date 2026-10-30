@@ -188,8 +188,24 @@ def validate_receipt(repo: Path, job: dict, receipt: dict) -> dict:
         expected_type = dict if key == "lld" else list
         if not isinstance(output.get(key), expected_type):
             fail(f"Invalid structured output: {key}")
+    lld = output["lld"]
+    for key in ("targetPackage", "interfaceName", "implementationName"):
+        if not isinstance(lld.get(key), str):
+            fail(f"Missing specified interface or implementation type: {key}")
+    for key in ("operations", "invariants", "dependencies"):
+        if not isinstance(lld.get(key), list):
+            fail(f"Invalid LLD contract list: {key}")
+    for operation in lld["operations"]:
+        if not isinstance(operation, dict) or not isinstance(operation.get("signature"), str) or \
+                type(operation.get("sourceAnchor")) is not int:
+            fail("Invalid method contract signature or source anchor")
+        if any(not isinstance(operation.get(key), list) for key in (
+                "preconditions", "postconditions", "exceptionBehavior", "sideEffects")):
+            fail("Invalid method contract conditions")
     if not all(isinstance(output.get(key), str) for key in ("interfaceJava", "implementationJava")):
         fail("Missing Java interface / implementation fields")
+    if output["status"] == "proposal" and not lld["operations"]:
+        fail("Cannot propose implementation without specified operations")
     if output["status"] == "proposal" and not (output["interfaceJava"].strip() and
                                                  output["implementationJava"].strip()):
         fail("Proposal needs both interface and implementation, or status=blocked")

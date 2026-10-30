@@ -9,10 +9,24 @@ export const outputSchema = {
     }, required: ["name", "responsibility", "preconditions", "postconditions"] } },
     patterns: { type: "array", items: { type: "string" } },
     lld: { type: "object", properties: {
-      operations: { type: "array", items: { type: "string" } },
+      targetPackage: { type: "string" },
+      interfaceName: { type: "string" },
+      implementationName: { type: "string" },
+      operations: { type: "array", items: {
+        type: "object", properties: {
+          signature: { type: "string" },
+          sourceAnchor: { type: "integer" },
+          preconditions: { type: "array", items: { type: "string" } },
+          postconditions: { type: "array", items: { type: "string" } },
+          exceptionBehavior: { type: "array", items: { type: "string" } },
+          sideEffects: { type: "array", items: { type: "string" } }
+        }, required: ["signature", "sourceAnchor", "preconditions", "postconditions",
+          "exceptionBehavior", "sideEffects"]
+      } },
       invariants: { type: "array", items: { type: "string" } },
       dependencies: { type: "array", items: { type: "string" } }
-    }, required: ["operations", "invariants", "dependencies"] },
+    }, required: ["targetPackage", "interfaceName", "implementationName", "operations",
+      "invariants", "dependencies"] },
     interfaceJava: { type: "string" },
     implementationJava: { type: "string" },
     preservedContracts: { type: "array", items: { type: "string" } },

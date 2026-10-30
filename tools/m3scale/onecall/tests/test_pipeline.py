@@ -61,7 +61,13 @@ class OneCallTests(unittest.TestCase):
             "output": output or {
                 "status": "proposal", "manualReviewRequired": True,
                 "atoms": [{"name": "value", "responsibility": "returns 7"}],
-                "patterns": ["value"], "lld": {"invariants": ["returns 7"]},
+                "patterns": ["value"], "lld": {
+                    "targetPackage": "com.anthropic.core",
+                    "interfaceName": "Foo", "implementationName": "FooImpl",
+                    "operations": [{"signature": "int value()", "sourceAnchor": 2,
+                                    "preconditions": [], "postconditions": ["returns 7"],
+                                    "exceptionBehavior": [], "sideEffects": []}],
+                    "invariants": ["returns 7"], "dependencies": []},
                 "interfaceJava": "interface Foo { int value(); }",
                 "implementationJava": "final class FooImpl implements Foo { public int value() { return 7; } }",
                 "preservedContracts": ["value"] , "risks": []
