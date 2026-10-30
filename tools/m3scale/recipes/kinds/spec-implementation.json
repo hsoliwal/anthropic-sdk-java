@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "spec-implementation",
+  "title": "Propose Java implementation from specified interface",
+  "mode": "proposal-only",
+  "autoApply": false,
+  "dependsOn": [
+    "spec-interface"
+  ],
+  "instructions": [
+    "Derive one implementation from the specified interface and atoms.",
+    "Maintain ordering, resource ownership, exception semantics and fixed point.",
+    "Use pure Java 8-compatible code for SDK core; do not assume JNI availability."
+  ],
+  "gates": [
+    "source fingerprint unchanged",
+    "explicit diff review",
+    "lint and compile",
+    "regression tests",
+    "public API and behavior comparison"
+  ]
+}

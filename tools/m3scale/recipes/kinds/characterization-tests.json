@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "characterization-tests",
+  "title": "Generate contract characterization tests",
+  "mode": "proposal-only",
+  "autoApply": false,
+  "dependsOn": [
+    "lld-spec"
+  ],
+  "instructions": [
+    "Propose failing-before/passing-after test fixtures where change is intentional, otherwise strict parity fixtures.",
+    "Cover boundary conditions, unknown variants, cancellation, retries and exceptions."
+  ],
+  "gates": [
+    "source fingerprint unchanged",
+    "explicit diff review",
+    "lint and compile",
+    "regression tests",
+    "public API and behavior comparison"
+  ]
+}

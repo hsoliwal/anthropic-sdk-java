@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "jni-boundary",
+  "title": "Specify optional JNI acceleration",
+  "mode": "proposal-only",
+  "autoApply": false,
+  "dependsOn": [
+    "spec-implementation"
+  ],
+  "instructions": [
+    "Specify pure Java fallback and byte-exact/native-equivalent behavior.",
+    "Propose JNI only after measured bottleneck, portability, native resource, and cross-platform tests."
+  ],
+  "gates": [
+    "source fingerprint unchanged",
+    "explicit diff review",
+    "lint and compile",
+    "regression tests",
+    "public API and behavior comparison"
+  ]
+}

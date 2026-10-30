@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "serialization",
+  "title": "Keep wire and JSON compatibility",
+  "mode": "proposal-only",
+  "autoApply": false,
+  "dependsOn": [
+    "spec-implementation"
+  ],
+  "instructions": [
+    "Preserve JSON aliases, unknown enum members, missing/nullable distinctions and field ordering.",
+    "Do not introduce client-side request validation absent from original contract."
+  ],
+  "gates": [
+    "source fingerprint unchanged",
+    "explicit diff review",
+    "lint and compile",
+    "regression tests",
+    "public API and behavior comparison"
+  ]
+}

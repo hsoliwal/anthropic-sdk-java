@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "deduplicate",
+  "title": "Converge equivalent behavior atoms",
+  "mode": "proposal-only",
+  "autoApply": false,
+  "dependsOn": [
+    "patternize",
+    "spec-implementation"
+  ],
+  "instructions": [
+    "Compare repeated atoms with counterexamples and shared contracts.",
+    "Prefer one canonical internal implementation and leave adapters at old entrypoints."
+  ],
+  "gates": [
+    "source fingerprint unchanged",
+    "explicit diff review",
+    "lint and compile",
+    "regression tests",
+    "public API and behavior comparison"
+  ]
+}

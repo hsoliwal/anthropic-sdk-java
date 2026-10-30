@@ -51,3 +51,10 @@ correctness and performance evidence, not performance claims alone.
 
 The discovery backlog is at docs/m3scale/algorithm-catalogue.csv; these are
 candidates for evaluation, **not copied or implemented code**.
+
+## One-call specification and implementation proposals
+
+See [onecall/README.md](onecall/README.md) for the Chrome built-in AI,
+file-local atomization → patternization → LLD → Java interface and implementation
+proposal workflow. This is a **stacked review change**; the new recipes are
+proposal definitions, not automatically executed source transformations.

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "loop-to-stream",
+  "title": "Convert safe loops to Java streams",
+  "mode": "proposal-only",
+  "autoApply": false,
+  "dependsOn": [
+    "spec-implementation"
+  ],
+  "instructions": [
+    "Require proof of iteration order, short-circuit behavior and exception points.",
+    "Do not convert loops that own resources, depend on mutation, or require early breaks."
+  ],
+  "gates": [
+    "source fingerprint unchanged",
+    "explicit diff review",
+    "lint and compile",
+    "regression tests",
+    "public API and behavior comparison"
+  ]
+}

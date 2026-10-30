@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "resource-lifecycle",
+  "title": "Refactor IO and close handling",
+  "mode": "proposal-only",
+  "autoApply": false,
+  "dependsOn": [
+    "spec-implementation"
+  ],
+  "instructions": [
+    "Track ownership of streams, buffers, temporary files and native handles.",
+    "Preserve deterministic close on success, error, cancellation and retries."
+  ],
+  "gates": [
+    "source fingerprint unchanged",
+    "explicit diff review",
+    "lint and compile",
+    "regression tests",
+    "public API and behavior comparison"
+  ]
+}
