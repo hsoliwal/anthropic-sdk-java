@@ -1,0 +1,27 @@
+name: M3-SCALE proposal guardrails
+
+on:
+  push:
+    paths:
+      - 'tools/m3scale/**'
+      - '.github/workflows/m3scale-onecall.yml'
+  pull_request:
+    paths:
+      - 'tools/m3scale/**'
+      - '.github/workflows/m3scale-onecall.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  proposal-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Inventory regression tests
+        run: python3 -m unittest discover -s tools/m3scale/tests -p 'test_*.py' -v
+      - name: One-call handoff regression tests
+        run: python3 -m unittest discover -s tools/m3scale/onecall/tests -p 'test_*.py' -v
+      - name: Browser call-budget regression tests
+        run: node --test tools/m3scale/onecall/chrome/test_onecall.mjs

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "atomize",
+  "title": "Identify minimal behavior-preserving atoms",
+  "mode": "proposal-only",
+  "autoApply": false,
+  "dependsOn": [],
+  "instructions": [
+    "Identify each method, constructor, private helper and effectful block; mark exact source line anchors.",
+    "Separate pure calculations from stateful effects without moving code.",
+    "Do not treat lexical hints as a verified AST."
+  ],
+  "gates": [
+    "source fingerprint unchanged",
+    "explicit diff review",
+    "lint and compile",
+    "regression tests",
+    "public API and behavior comparison"
+  ]
+}

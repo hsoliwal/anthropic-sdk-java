@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "spec-interface",
+  "title": "Propose a specified Java interface",
+  "mode": "proposal-only",
+  "autoApply": false,
+  "dependsOn": [
+    "lld-spec"
+  ],
+  "instructions": [
+    "Specify the narrowest interface matching approved LLD operations.",
+    "Do not invent API changes or modify generated SDK public types.",
+    "For unsafe Kotlin ABI conversions return status=blocked."
+  ],
+  "gates": [
+    "source fingerprint unchanged",
+    "explicit diff review",
+    "lint and compile",
+    "regression tests",
+    "public API and behavior comparison"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "patternize",
+  "title": "Identify repeated implementation patterns",
+  "mode": "proposal-only",
+  "autoApply": false,
+  "dependsOn": [
+    "atomize"
+  ],
+  "instructions": [
+    "Catalog repeated structural idioms using stable signatures and counterexamples.",
+    "Separate pattern candidates from proven semantic equivalence."
+  ],
+  "gates": [
+    "source fingerprint unchanged",
+    "explicit diff review",
+    "lint and compile",
+    "regression tests",
+    "public API and behavior comparison"
+  ]
+}

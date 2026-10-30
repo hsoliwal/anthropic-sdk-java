@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "dependency-inline",
+  "title": "Propose licensed source convergence",
+  "mode": "proposal-only",
+  "autoApply": false,
+  "dependsOn": [
+    "spec-implementation"
+  ],
+  "instructions": [
+    "Inventory transitive dependencies, per-file license and provenance before any source reuse.",
+    "Do not copy source without license compatibility and third-party attribution review."
+  ],
+  "gates": [
+    "source fingerprint unchanged",
+    "explicit diff review",
+    "lint and compile",
+    "regression tests",
+    "public API and behavior comparison"
+  ]
+}

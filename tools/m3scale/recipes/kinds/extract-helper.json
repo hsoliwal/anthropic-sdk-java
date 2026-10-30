@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "extract-helper",
+  "title": "Extract independent private helpers",
+  "mode": "proposal-only",
+  "autoApply": false,
+  "dependsOn": [
+    "spec-implementation"
+  ],
+  "instructions": [
+    "Identify cohesive method slices with explicit capture and side-effect inventories.",
+    "Propose private extraction only if evaluation order and exception boundaries remain identical."
+  ],
+  "gates": [
+    "source fingerprint unchanged",
+    "explicit diff review",
+    "lint and compile",
+    "regression tests",
+    "public API and behavior comparison"
+  ]
+}

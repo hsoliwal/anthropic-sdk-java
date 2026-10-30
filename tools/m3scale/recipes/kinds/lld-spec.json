@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "lld-spec",
+  "title": "Create contract-first low-level design",
+  "mode": "proposal-only",
+  "autoApply": false,
+  "dependsOn": [
+    "patternize"
+  ],
+  "instructions": [
+    "Produce operations with inputs, outputs, preconditions, postconditions and errors.",
+    "Record ownership, order, concurrency, nullability, lifecycle and public ABI invariants.",
+    "Explicitly mark unknown contracts as blocked."
+  ],
+  "gates": [
+    "source fingerprint unchanged",
+    "explicit diff review",
+    "lint and compile",
+    "regression tests",
+    "public API and behavior comparison"
+  ]
+}
