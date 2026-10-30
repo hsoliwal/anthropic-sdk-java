@@ -43,9 +43,11 @@ Prompt API enabled and an available on-device model. Select
 JSON. Model availability, device requirements, local download and user activation
 may prevent generation; there is no cloud fallback or hidden second call.
 
+Back at the repository root (in a new shell if necessary):
+
 ```bash
 python3 tools/m3scale/onecall/onecall.py verify --repo . \
-  --job /tmp/m3scale-job.json --result ~/Downloads/m3scale-<jobId>.json \
+  --job /tmp/m3scale-job.json --result "$HOME/Downloads/m3scale-YOUR_JOB_ID.json" \
   --out /tmp/m3scale-review
 ```
 
