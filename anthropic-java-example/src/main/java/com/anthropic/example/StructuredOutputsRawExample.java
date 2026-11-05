@@ -16,6 +16,8 @@ import java.util.Map;
  * derived from the structure of Java classes.
  */
 public final class StructuredOutputsRawExample {
+    private static final String TYPE_KEY = "type";
+    private static final String STRING_TYPE = "string";
 
     private StructuredOutputsRawExample() {}
 
@@ -25,7 +27,7 @@ public final class StructuredOutputsRawExample {
 
         JsonOutputFormat.Schema schema = JsonOutputFormat.Schema.builder()
                 // The "$schema" property can be omitted.
-                .putAdditionalProperty("type", JsonValue.from("object"))
+                .putAdditionalProperty(TYPE_KEY, JsonValue.from("object"))
                 .putAdditionalProperty(
                         "properties",
                         JsonValue.from(Map.of(
@@ -33,25 +35,25 @@ public final class StructuredOutputsRawExample {
                                 Map.of(
                                         "minItems",
                                         1,
-                                        "type",
+                                        TYPE_KEY,
                                         "array",
                                         "items",
                                         Map.of(
-                                                "type",
+                                                TYPE_KEY,
                                                 "object",
                                                 "properties",
                                                 Map.of(
                                                         "author",
                                                                 Map.of(
-                                                                        "type",
+                                                                        TYPE_KEY,
                                                                         "object",
                                                                         "properties",
                                                                         Map.of(
-                                                                                "birthYear", Map.of("type", "integer"),
+                                                                                "birthYear", Map.of(TYPE_KEY, "integer"),
                                                                                 "deathYear",
                                                                                         Map.of(
-                                                                                                "type",
-                                                                                                "string",
+                                                                                                TYPE_KEY,
+                                                                                                STRING_TYPE,
                                                                                                 "description",
                                                                                                 "The year the person"
                                                                                                     + " died, or"
@@ -60,8 +62,8 @@ public final class StructuredOutputsRawExample {
                                                                                                     + " living."),
                                                                                 "name",
                                                                                         Map.of(
-                                                                                                "type",
-                                                                                                "string",
+                                                                                                TYPE_KEY,
+                                                                                                STRING_TYPE,
                                                                                                 "description",
                                                                                                 "The first"
                                                                                                         + " name"
@@ -72,16 +74,16 @@ public final class StructuredOutputsRawExample {
                                                                         List.of("birthYear", "deathYear", "name"),
                                                                         "additionalProperties",
                                                                         false),
-                                                        "genre", Map.of("type", "string"),
+                                                        "genre", Map.of(TYPE_KEY, STRING_TYPE),
                                                         "publicationYear",
                                                                 Map.of(
-                                                                        "type",
+                                                                        TYPE_KEY,
                                                                         "integer",
                                                                         "description",
                                                                         "The year in which the book was first"
                                                                                 + " published. No earlier than"
                                                                                 + " 1500."),
-                                                        "title", Map.of("type", "string")),
+                                                        "title", Map.of(TYPE_KEY, STRING_TYPE)),
                                                 "required",
                                                 List.of("author", "genre", "publicationYear", "title"),
                                                 "additionalProperties",
