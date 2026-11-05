@@ -84,8 +84,7 @@ jobs:
         if: github.event_name == 'pull_request' && github.event.number == 9 && github.head_ref == 'recipe/gradle-m3-quality-20261030'
         # Temporary draft qualification: commit generated locks and restore this workflow before merge.
         run: |
-          ./gradlew -Pm3Quality=true :tasks --all resolveAndLockAll --write-locks --max-workers=1
-          ./gradlew -p buildSrc resolveAndLockAll --write-locks -Pm3Quality=true
+          ./scripts/lock -Pm3Quality=true
           git add --intent-to-add -- '*.lockfile'
           git diff --binary --full-index --no-ext-diff --no-textconv
           test -z "$(git ls-files --others --exclude-standard -- '*.lockfile')"
