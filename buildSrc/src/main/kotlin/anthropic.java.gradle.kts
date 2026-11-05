@@ -241,6 +241,22 @@ pmd {
     toolVersion = "7.24.0"
     isConsoleOutput = true
     ruleSets = listOf("category/java/errorprone.xml", "category/java/bestpractices.xml")
+    if (project.name == "anthropic-java-example") {
+        // These runnable examples intentionally print the SDK response and usage status.
+        ruleSets = emptyList()
+        ruleSetConfig = resources.text.fromString(
+            """
+            <ruleset name="M3 command-line example quality"
+                     xmlns="http://pmd.sourceforge.net/ruleset/2.0.0">
+                <description>Keep error-prone and best-practice checks for runnable examples.</description>
+                <rule ref="category/java/errorprone.xml"/>
+                <rule ref="category/java/bestpractices.xml">
+                    <exclude name="SystemPrintln"/>
+                </rule>
+            </ruleset>
+            """.trimIndent()
+        )
+    }
 }
 
 jacoco {
