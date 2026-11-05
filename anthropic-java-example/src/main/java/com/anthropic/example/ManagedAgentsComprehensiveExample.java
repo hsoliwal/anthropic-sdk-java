@@ -34,6 +34,7 @@ public final class ManagedAgentsComprehensiveExample {
 
     private static final String MCP_SERVER_NAME = "github";
     private static final String MCP_SERVER_URL = "https://api.githubcopilot.com/mcp/";
+    private static final String GET_WEATHER_TOOL_NAME = "get_weather";
 
     private static final String PROMPT = "Hi! List every tool and skill you have access to, grouped by where they "
             + "came from (built-in toolset, custom tool, MCP server, skills).";
@@ -109,7 +110,7 @@ public final class ManagedAgentsComprehensiveExample {
                                 .mcpServerName(MCP_SERVER_NAME)
                                 .build())
                         .addTool(BetaManagedAgentsCustomToolParams.builder()
-                                .name("get_weather")
+                                .name(GET_WEATHER_TOOL_NAME)
                                 .description("Look up the current weather for a city.")
                                 .inputSchema(BetaManagedAgentsCustomToolInputSchema.builder()
                                         .properties(BetaManagedAgentsCustomToolInputSchema.Properties.builder()
@@ -166,7 +167,7 @@ public final class ManagedAgentsComprehensiveExample {
                 // If the agent calls the custom get_weather tool, provide a result
                 if (event.isAgentCustomToolUse()) {
                     var toolUse = event.asAgentCustomToolUse();
-                    if ("get_weather".equals(toolUse.name())) {
+                    if (GET_WEATHER_TOOL_NAME.equals(toolUse.name())) {
                         client.beta()
                                 .sessions()
                                 .events()
