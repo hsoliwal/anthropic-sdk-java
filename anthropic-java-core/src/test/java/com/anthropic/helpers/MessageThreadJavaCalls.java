@@ -17,30 +17,33 @@ import java.util.List;
 
 /** Calls on a message thread whose overloads have to resolve from Java source. */
 public final class MessageThreadJavaCalls {
+    private static final String TEXT = "Text";
+    private static final String MODIFIER = "Modifier";
+
     private MessageThreadJavaCalls() {}
 
     /** Sends five turns, one with each kind of message, and appends each kind before the last. */
     public static void sendEachKind(BetaMessageThread thread, BetaMessageParam param) {
-        BetaMessage reply = thread.send("Text");
+        BetaMessage reply = thread.send(TEXT);
         thread.send(reply);
         thread.send(param);
         reply = thread.send(Collections.singletonList(param));
         thread.append(reply);
         thread.append(BetaMessageParam.ofUser("Appended"));
         thread.append(Collections.singletonList(param));
-        thread.send(builder -> builder.addUserMessage("Modifier"));
+        thread.send(builder -> builder.addUserMessage(MODIFIER));
     }
 
     /** Does the same on an asynchronous thread, waiting for each turn. */
     public static void sendEachKind(BetaMessageThreadAsync thread, BetaMessageParam param) {
-        BetaMessage reply = thread.send("Text").join();
+        BetaMessage reply = thread.send(TEXT).join();
         thread.send(reply).join();
         thread.send(param).join();
         reply = thread.send(Collections.singletonList(param)).join();
         thread.append(reply);
         thread.append(BetaMessageParam.ofUser("Appended"));
         thread.append(Collections.singletonList(param));
-        thread.send(builder -> builder.addUserMessage("Modifier")).join();
+        thread.send(builder -> builder.addUserMessage(MODIFIER)).join();
     }
 
     /** Creates a thread of a class with and without request options, and sends a turn on each. */
@@ -48,7 +51,7 @@ public final class MessageThreadJavaCalls {
         StructuredBetaMessageThread<T> thread = messages.thread(paramsOfClass(outputType));
         StructuredBetaMessageThread<T> withOptions = messages.thread(paramsOfConfig(outputType), RequestOptions.none());
         return Arrays.asList(
-                thread.send("Text"), withOptions.fork().send(builder -> builder.addUserMessage("Modifier")));
+                thread.send(TEXT), withOptions.fork().send(builder -> builder.addUserMessage(MODIFIER)));
     }
 
     /** Does the same on an asynchronous client, waiting for each turn. */
@@ -57,10 +60,10 @@ public final class MessageThreadJavaCalls {
         StructuredBetaMessageThreadAsync<T> withOptions =
                 messages.thread(paramsOfConfig(outputType), RequestOptions.none());
         return Arrays.asList(
-                thread.send("Text").join(),
+                thread.send(TEXT).join(),
                 withOptions
                         .fork()
-                        .send(builder -> builder.addUserMessage("Modifier"))
+                        .send(builder -> builder.addUserMessage(MODIFIER))
                         .join());
     }
 
