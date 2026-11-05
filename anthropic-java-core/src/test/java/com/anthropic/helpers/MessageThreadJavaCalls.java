@@ -50,8 +50,7 @@ public final class MessageThreadJavaCalls {
     public static <T> List<StructuredMessage<T>> sendStructured(MessageService messages, Class<T> outputType) {
         StructuredBetaMessageThread<T> thread = messages.thread(paramsOfClass(outputType));
         StructuredBetaMessageThread<T> withOptions = messages.thread(paramsOfConfig(outputType), RequestOptions.none());
-        return Arrays.asList(
-                thread.send(TEXT), withOptions.fork().send(builder -> builder.addUserMessage(MODIFIER)));
+        return Arrays.asList(thread.send(TEXT), withOptions.fork().send(builder -> builder.addUserMessage(MODIFIER)));
     }
 
     /** Does the same on an asynchronous client, waiting for each turn. */
