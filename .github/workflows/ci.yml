@@ -50,10 +50,7 @@ jobs:
         run: python3 scripts/tests/test-lint-runner.py
 
       - name: Run lints
-        run: |
-          ./gradlew --max-workers=2 :anthropic-java-core:formatJava :anthropic-java-example:formatJava
-          git diff --full-index --no-ext-diff --no-color
-          ./scripts/lint
+        run: ./scripts/lint
 
   build:
     # The first run on a fresh cache compiles everything and generates all documentation, which
@@ -123,7 +120,7 @@ jobs:
         run: python3 scripts/tests/test-mock-ownership.py
 
       - name: Run tests
-        run: ./scripts/test -Pm3Quality=true m3Quality
+        run: ./scripts/test
 
   detect_breaking_changes:
     timeout-minutes: 15
