@@ -49,7 +49,8 @@ public final class StructuredOutputsRawExample {
                                                                         "object",
                                                                         "properties",
                                                                         Map.of(
-                                                                                "birthYear", Map.of(TYPE_KEY, "integer"),
+                                                                                "birthYear",
+                                                                                        Map.of(TYPE_KEY, "integer"),
                                                                                 "deathYear",
                                                                                         Map.of(
                                                                                                 TYPE_KEY,
