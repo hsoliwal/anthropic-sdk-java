@@ -35,6 +35,9 @@ tasks.register("resolveAndLockAll") {
         }
     }
     doLast {
+        // PMD creates its auxiliary classpath configurations when its tasks are realized.
+        // Realize only PMD tasks before enumerating configurations for strict lock generation.
+        tasks.withType<Pmd>().toList()
         configurations.filter { it.isCanBeResolved }.forEach { it.resolve() }
     }
 }
