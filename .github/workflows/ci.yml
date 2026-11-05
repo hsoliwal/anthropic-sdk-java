@@ -80,15 +80,6 @@ jobs:
           # Required for configuration-cache data to be saved/restored across CI runs.
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
-      - name: Capture quality dependency locks
-        if: github.event_name == 'pull_request' && github.event.number == 9 && github.head_ref == 'recipe/gradle-m3-quality-20261030'
-        # Temporary draft qualification: commit generated locks and restore this workflow before merge.
-        run: |
-          ./scripts/lock -Pm3Quality=true
-          git add --intent-to-add -- '*.lockfile'
-          git diff --binary --full-index --no-ext-diff --no-textconv
-          test -z "$(git ls-files --others --exclude-standard -- '*.lockfile')"
-
       - name: Build SDK
         # Where the "Build local Maven repo" step runs it needs the Javadoc, and generating it in
         # the same Gradle run as the compile is faster.
