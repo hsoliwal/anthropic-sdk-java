@@ -32,6 +32,9 @@ import com.anthropic.models.messages.Model;
  * proactively refreshes it before expiry.
  */
 public class CredentialProviderExamples {
+    private static final String UNUSED_WARNING = "unused";
+    private static final String EXAMPLE_ORGANIZATION_ID = "00000000-0000-0000-0000-000000000000";
+    private static final String EXAMPLE_FEDERATION_RULE_ID = "fdrl_01...";
 
     // =============================================================================
     // Section 1: Zero-config (recommended for production workloads)
@@ -70,16 +73,16 @@ public class CredentialProviderExamples {
     // Section 2: Explicit credentials via constructor
     // =============================================================================
     // --- 2a. WorkloadIdentityCredentials: exchange an external OIDC JWT --------
-    @SuppressWarnings("unused")
+    @SuppressWarnings(UNUSED_WARNING)
     public static void workloadIdentityFromFileExample() {
         // JWT source option i: read from a file (re-read on every refresh — handles k8s rotation)
         AnthropicClient client = AnthropicOkHttpClient.builder()
                 .fromEnv()
                 .configurationProvider(InMemoryProfileConfigProvider.of(ProfileConfig.builder()
-                        .organizationId("00000000-0000-0000-0000-000000000000")
+                        .organizationId(EXAMPLE_ORGANIZATION_ID)
                         .authentication(AuthenticationConfig.builder()
                                 .type(AuthenticationType.OIDC_FEDERATION)
-                                .federationRuleId("fdrl_01...")
+                                .federationRuleId(EXAMPLE_FEDERATION_RULE_ID)
                                 .serviceAccountId("svac_01...")
                                 .identityToken(IdentityTokenConfig.builder()
                                         .source("file")
@@ -90,16 +93,16 @@ public class CredentialProviderExamples {
                 .build();
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings(UNUSED_WARNING)
     public static void workloadIdentityFromEnvVarExample() {
         // JWT source option ii: from an env var (CI systems that inject the token directly)
         AnthropicClient client = AnthropicOkHttpClient.builder()
                 .fromEnv()
                 .configurationProvider(InMemoryProfileConfigProvider.of(ProfileConfig.builder()
-                        .organizationId("00000000-0000-0000-0000-000000000000")
+                        .organizationId(EXAMPLE_ORGANIZATION_ID)
                         .authentication(AuthenticationConfig.builder()
                                 .type(AuthenticationType.OIDC_FEDERATION)
-                                .federationRuleId("fdrl_01...")
+                                .federationRuleId(EXAMPLE_FEDERATION_RULE_ID)
                                 .identityToken(IdentityTokenConfig.builder()
                                         .source("value")
                                         .path(System.getenv("ANTHROPIC_IDENTITY_TOKEN"))
@@ -109,7 +112,7 @@ public class CredentialProviderExamples {
                 .build();
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings(UNUSED_WARNING)
     public static void workloadIdentityCustomProviderExample() {
         // JWT source option iii: custom provider (secrets manager, internal token service, etc.)
         // Use InMemoryConfigurationProvider with a custom identity token source.
@@ -118,10 +121,10 @@ public class CredentialProviderExamples {
         AnthropicClient client = AnthropicOkHttpClient.builder()
                 .fromEnv()
                 .configurationProvider(InMemoryProfileConfigProvider.of(ProfileConfig.builder()
-                        .organizationId("00000000-0000-0000-0000-000000000000")
+                        .organizationId(EXAMPLE_ORGANIZATION_ID)
                         .authentication(AuthenticationConfig.builder()
                                 .type(AuthenticationType.OIDC_FEDERATION)
-                                .federationRuleId("fdrl_01...")
+                                .federationRuleId(EXAMPLE_FEDERATION_RULE_ID)
                                 .serviceAccountId("svac_01...")
                                 // For custom token sources, you can use "value" source with the token
                                 .identityToken(IdentityTokenConfig.builder()
@@ -176,7 +179,7 @@ public class CredentialProviderExamples {
     //   credentials/<profile>.json   — secret (0600). Holds access_token,
     //                                  expires_at, and (for user_oauth with
     //                                  a client_id) refresh_token.
-    @SuppressWarnings("unused")
+    @SuppressWarnings(UNUSED_WARNING)
     public static void configurationFileProviderExample() {
         // To use a specific profile from disk, set the ANTHROPIC_PROFILE env var:
         //   export ANTHROPIC_PROFILE=production
@@ -188,7 +191,7 @@ public class CredentialProviderExamples {
         AnthropicClient client = AnthropicOkHttpClient.fromEnv();
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings(UNUSED_WARNING)
     public static void configurationFileProviderFromEnvExample() {
         // Or resolve the profile from ANTHROPIC_PROFILE / <config_dir>/active_config / "default"
         // by using fromEnv() which automatically looks for profile configuration:
@@ -196,7 +199,7 @@ public class CredentialProviderExamples {
     }
 
     // --- 2c. Static Token: you already have a bearer token ---------------------
-    @SuppressWarnings("unused")
+    @SuppressWarnings(UNUSED_WARNING)
     public static void staticTokenExample() {
         // If you have a static API key or auth token:
         AnthropicClient client =
@@ -210,15 +213,15 @@ public class CredentialProviderExamples {
     // =============================================================================
     // Section 3: Async Client
     // =============================================================================
-    @SuppressWarnings("unused")
+    @SuppressWarnings(UNUSED_WARNING)
     public static void asyncExample() {
         var asyncClient = com.anthropic.client.okhttp.AnthropicOkHttpClientAsync.builder()
                 .fromEnv()
                 .configurationProvider(InMemoryProfileConfigProvider.of(ProfileConfig.builder()
-                        .organizationId("00000000-0000-0000-0000-000000000000")
+                        .organizationId(EXAMPLE_ORGANIZATION_ID)
                         .authentication(AuthenticationConfig.builder()
                                 .type(AuthenticationType.OIDC_FEDERATION)
-                                .federationRuleId("fdrl_01...")
+                                .federationRuleId(EXAMPLE_FEDERATION_RULE_ID)
                                 .identityToken(IdentityTokenConfig.builder()
                                         .source("file")
                                         .path("/var/run/secrets/kubernetes.io/serviceaccount/token")
@@ -241,7 +244,7 @@ public class CredentialProviderExamples {
     // =============================================================================
     // Section 4: Kubernetes / Cloud Provider Examples
     // =============================================================================
-    @SuppressWarnings("unused")
+    @SuppressWarnings(UNUSED_WARNING)
     public static void kubernetesExample() {
         // For Kubernetes workloads with projected service account tokens:
         //
@@ -271,7 +274,7 @@ public class CredentialProviderExamples {
         AnthropicClient client = AnthropicOkHttpClient.fromEnv();
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings(UNUSED_WARNING)
     public static void githubActionsExample() {
         // For GitHub Actions with OIDC:
         //
