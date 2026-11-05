@@ -120,7 +120,7 @@ jobs:
         run: python3 scripts/tests/test-mock-ownership.py
 
       - name: Run tests
-        run: ./scripts/test -Pm3Quality=true m3Quality
+        run: ./scripts/test
 
   detect_breaking_changes:
     timeout-minutes: 15
