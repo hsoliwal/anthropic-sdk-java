@@ -5,11 +5,11 @@ import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.core.JsonValue;
 import com.anthropic.models.beta.messages.BetaContentBlockParam;
 import com.anthropic.models.beta.messages.BetaTool;
+import com.anthropic.models.beta.messages.BetaTool.InputSchema;
 import com.anthropic.models.beta.messages.BetaToolResultBlockParam;
 import com.anthropic.models.beta.messages.BetaToolUseBlock;
 import com.anthropic.models.beta.messages.BetaToolUseBlockParam;
 import com.anthropic.models.beta.messages.MessageCreateParams;
-import com.anthropic.models.beta.messages.BetaTool.InputSchema;
 import java.util.List;
 import java.util.Map;
 
