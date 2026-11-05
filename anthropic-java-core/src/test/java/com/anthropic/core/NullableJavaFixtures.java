@@ -6,6 +6,8 @@ package com.anthropic.core;
  * Framework's {@code @Nullable}) are emitted as runtime-visible type annotations by {@code javac},
  * whereas the Kotlin compiler does not surface them through reflection.
  */
+// This holder groups nested fixture types and deliberately has no utility methods.
+@SuppressWarnings("PMD.MissingStaticMethodInNonInstantiatableClass")
 public final class NullableJavaFixtures {
     private NullableJavaFixtures() {}
 
