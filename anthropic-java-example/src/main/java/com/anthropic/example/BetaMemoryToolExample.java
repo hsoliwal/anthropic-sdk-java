@@ -60,6 +60,10 @@ public final class BetaMemoryToolExample {
     public static class FileSystemMemoryToolHandler implements BetaMemoryToolHandler {
 
         private static final String ALIAS_PREFIX = "/memories";
+        private static final String PATH_MESSAGE_PREFIX = "The path ";
+        private static final int SIZE_BASE = 1_000;
+        private static final int MAX_FILE_LINES = 999_999;
+        private static final int MAX_REPLACEMENT_OCCURRENCES = 1;
         private final Path sandboxRoot;
 
         /**
@@ -95,7 +99,7 @@ public final class BetaMemoryToolExample {
                 return null;
             }
 
-            if (!memoryToolPath.equals(ALIAS_PREFIX) && !memoryToolPath.startsWith(ALIAS_PREFIX + "/")) {
+            if (!ALIAS_PREFIX.equals(memoryToolPath) && !memoryToolPath.startsWith(ALIAS_PREFIX + "/")) {
                 return null;
             }
 
@@ -142,15 +146,15 @@ public final class BetaMemoryToolExample {
          * @return A formatted string with human-readable units (e.g., {@code "1.5k"})
          */
         private String formatSize(long nBytes) {
-            if (nBytes < 1_000) {
+            if (nBytes < SIZE_BASE) {
                 return String.valueOf(nBytes);
             }
 
             String suffixes = "kMGTPE";
-            int exp = (int) (Math.log(nBytes) / Math.log(1_000));
+            int exp = (int) (Math.log(nBytes) / Math.log(SIZE_BASE));
             int suffixIdx = Math.min(exp - 1, suffixes.length() - 1);
 
-            return String.format("%.1f%c", nBytes / Math.pow(1_000, exp), suffixes.charAt(suffixIdx));
+            return String.format("%.1f%c", nBytes / Math.pow(SIZE_BASE, exp), suffixes.charAt(suffixIdx));
         }
 
         @Override
@@ -184,7 +188,7 @@ public final class BetaMemoryToolExample {
 
             if (file == null || !Files.exists(file)) {
                 throw new IllegalArgumentException(
-                        "The path " + path + " does not exist. Please provide a valid path.");
+                        PATH_MESSAGE_PREFIX + path + " does not exist. Please provide a valid path.");
             }
 
             if (Files.isDirectory(file)) {
@@ -209,7 +213,7 @@ public final class BetaMemoryToolExample {
                     // Read lines as UTF-8.
                     List<String> lines = Files.readAllLines(file, UTF_8);
 
-                    if (lines.size() > 999_999) {
+                    if (lines.size() > MAX_FILE_LINES) {
                         throw new IllegalArgumentException(
                                 "File " + path + " exceeds maximum line limit of 999,999 lines.");
                     }
@@ -247,7 +251,7 @@ public final class BetaMemoryToolExample {
 
             if (file == null || !Files.exists(file) || Files.isDirectory(file)) {
                 throw new IllegalArgumentException(
-                        "The path " + path + " does not exist. Please provide a valid path.");
+                        PATH_MESSAGE_PREFIX + path + " does not exist. Please provide a valid path.");
             }
 
             try {
@@ -270,7 +274,7 @@ public final class BetaMemoryToolExample {
                             + "` did not appear verbatim in " + path + ".");
                 }
 
-                if (occurrences.size() > 1) {
+                if (occurrences.size() > MAX_REPLACEMENT_OCCURRENCES) {
                     String lineList = occurrences.stream().map(Object::toString).collect(Collectors.joining(", "));
 
                     throw new IllegalArgumentException("No replacement was performed. Multiple occurrences of old_str `"
@@ -295,7 +299,7 @@ public final class BetaMemoryToolExample {
             Path file = resolvePath(path);
 
             if (file == null || !Files.exists(file) || Files.isDirectory(file)) {
-                throw new IllegalArgumentException("The path " + path + " does not exist");
+                throw new IllegalArgumentException(PATH_MESSAGE_PREFIX + path + " does not exist");
             }
 
             try {
@@ -323,7 +327,7 @@ public final class BetaMemoryToolExample {
             Path file = resolvePath(path);
 
             if (file == null || !Files.exists(file)) {
-                throw new IllegalArgumentException("The path " + path + " does not exist");
+                throw new IllegalArgumentException(PATH_MESSAGE_PREFIX + path + " does not exist");
             }
 
             try {
@@ -360,7 +364,7 @@ public final class BetaMemoryToolExample {
             Path newFile = resolvePath(newPath);
 
             if (oldFile == null || !Files.exists(oldFile)) {
-                throw new IllegalArgumentException("The path " + oldPath + " does not exist");
+                throw new IllegalArgumentException(PATH_MESSAGE_PREFIX + oldPath + " does not exist");
             }
             if (newFile == null) {
                 throw new IllegalArgumentException("Invalid destination path");
