@@ -223,11 +223,18 @@ registerPalantir(name = "lint", description = "Verifies all Java source files ar
 val m3QualityEnabled = providers.gradleProperty("m3Quality").map { it.equals("true", ignoreCase = true) }.orElse(false)
 
 checkstyle {
+    // Keep opt-in scans off the default lifecycle graph; onlyIf runs after cache serialization.
+    if (!m3QualityEnabled.get()) {
+        sourceSets = emptyList()
+    }
     toolVersion = "12.3.1"
     configFile = rootProject.file("config/checkstyle/checkstyle.xml")
 }
 
 pmd {
+    if (!m3QualityEnabled.get()) {
+        sourceSets = emptyList()
+    }
     toolVersion = "7.24.0"
     isConsoleOutput = true
     ruleSets = listOf("category/java/errorprone.xml", "category/java/bestpractices.xml")
@@ -238,18 +245,21 @@ jacoco {
 }
 
 tasks.withType<Checkstyle>().configureEach {
-    onlyIf { m3QualityEnabled.get() }
+    val qualityEnabled = m3QualityEnabled.get()
+    onlyIf { qualityEnabled }
     reports.xml.required.set(true)
 }
 tasks.withType<Pmd>().configureEach {
-    onlyIf { m3QualityEnabled.get() }
+    val qualityEnabled = m3QualityEnabled.get()
+    onlyIf { qualityEnabled }
     reports.xml.required.set(true)
 }
 tasks.withType<Test>().configureEach {
     extensions.findByType(JacocoTaskExtension::class.java)?.isEnabled = m3QualityEnabled.get()
 }
 tasks.withType<JacocoReport>().configureEach {
-    onlyIf { m3QualityEnabled.get() }
+    val qualityEnabled = m3QualityEnabled.get()
+    onlyIf { qualityEnabled }
     dependsOn(tasks.named("test"))
     reports.xml.required.set(true)
 }
