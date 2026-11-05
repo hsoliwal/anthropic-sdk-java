@@ -24,6 +24,8 @@ public final class JpmsUsageMain {
     private static final String CORE_MODULE = "com.anthropic.core";
     private static final String OKHTTP_MODULE = "com.anthropic.client.okhttp";
 
+    // This compatibility fixture deliberately reports its runtime and successful completion.
+    @SuppressWarnings("PMD.SystemPrintln")
     public static void main(String[] args) throws Exception {
         Module self = JpmsUsageMain.class.getModule();
         System.out.println("JPMS usage check in " + self + " on JVM " + Runtime.version());
@@ -51,7 +53,7 @@ public final class JpmsUsageMain {
         // Hand-written packages need their own `exports` in the core descriptor.
         AnthropicBackend backend =
                 AnthropicBackend.builder().apiKey("my-anthropic-api-key").build();
-        require(backend.baseUrl().equals("https://api.anthropic.com"), "backend base URL");
+        require("https://api.anthropic.com".equals(backend.baseUrl()), "backend base URL");
 
         // `Region` arrives through the SDK modules' `requires transitive`; this module requires no AWS
         // module itself.
