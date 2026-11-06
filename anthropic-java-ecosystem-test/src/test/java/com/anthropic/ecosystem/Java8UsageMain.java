@@ -13,6 +13,8 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 // Java-8-only breakages that compiling to release 8 on a newer JDK can't surface. Kept free of
 // AssertJ/JUnit so the only runtime surface is the SDK and its direct dependencies.
 public final class Java8UsageMain {
+    // This compatibility fixture deliberately reports its runtime and successful completion.
+    @SuppressWarnings("PMD.SystemPrintln")
     public static void main(String[] args) throws Exception {
         System.out.println("Java 8 usage check on JVM " + System.getProperty("java.version"));
 

@@ -3,8 +3,13 @@ package com.anthropic.example;
 import com.anthropic.client.AnthropicClient;
 import com.anthropic.client.okhttp.AnthropicOkHttpClient;
 import com.anthropic.core.JsonValue;
-import com.anthropic.models.beta.messages.*;
+import com.anthropic.models.beta.messages.BetaContentBlockParam;
+import com.anthropic.models.beta.messages.BetaTool;
 import com.anthropic.models.beta.messages.BetaTool.InputSchema;
+import com.anthropic.models.beta.messages.BetaToolResultBlockParam;
+import com.anthropic.models.beta.messages.BetaToolUseBlock;
+import com.anthropic.models.beta.messages.BetaToolUseBlockParam;
+import com.anthropic.models.beta.messages.MessageCreateParams;
 import java.util.List;
 import java.util.Map;
 
@@ -15,14 +20,15 @@ public final class BetaMessagesToolsRawExample {
         CELSIUS,
         FAHRENHEIT;
 
+        @Override
         public String toString() {
             switch (this) {
                 case CELSIUS:
                     return "°C";
                 case FAHRENHEIT:
-                default:
                     return "°F";
             }
+            return "°F";
         }
 
         /** Converts a temperature in Kelvin to a temperature in degrees Fahrenheit or Celsius. */
@@ -31,9 +37,9 @@ public final class BetaMessagesToolsRawExample {
                 case CELSIUS:
                     return temperatureK - 273.15;
                 case FAHRENHEIT:
-                default:
                     return (temperatureK - 273.15) * 1.8 + 32.0;
             }
+            return (temperatureK - 273.15) * 1.8 + 32.0;
         }
     }
 

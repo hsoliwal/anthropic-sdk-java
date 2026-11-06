@@ -1,8 +1,16 @@
 import org.gradle.api.artifacts.dsl.LockMode
+import org.gradle.api.plugins.quality.Checkstyle
+import org.gradle.api.plugins.quality.Pmd
+import org.gradle.api.tasks.testing.Test
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.testing.jacoco.plugins.JacocoTaskExtension
+import org.gradle.testing.jacoco.tasks.JacocoReport
 
 plugins {
     `java-library`
+    checkstyle
+    pmd
+    jacoco
 }
 
 // Pin every resolved configuration to the versions recorded in this module's `gradle.lockfile`.
@@ -27,6 +35,9 @@ tasks.register("resolveAndLockAll") {
         }
     }
     doLast {
+        // PMD creates its auxiliary classpath configurations when its tasks are realized.
+        // Realize only PMD tasks before enumerating configurations for strict lock generation.
+        tasks.withType<Pmd>().toList()
         configurations.filter { it.isCanBeResolved }.forEach { it.resolve() }
     }
 }
@@ -209,3 +220,71 @@ fun registerPalantir(
 
 registerPalantir(name = "format", description = "Formats all Java source files.")
 registerPalantir(name = "lint", description = "Verifies all Java source files are formatted.")
+
+// M3 quality suite: added to every Java module by the existing convention, not per-file edits.
+// Keep default SDK checks unchanged until static-analysis baselines and locks are verified.
+val m3QualityEnabled = providers.gradleProperty("m3Quality").map { it.equals("true", ignoreCase = true) }.orElse(false)
+
+checkstyle {
+    // Keep opt-in scans off the default lifecycle graph; onlyIf runs after cache serialization.
+    if (!m3QualityEnabled.get()) {
+        sourceSets = emptyList()
+    }
+    toolVersion = "12.3.1"
+    configFile = rootProject.file("config/checkstyle/checkstyle.xml")
+}
+
+pmd {
+    if (!m3QualityEnabled.get()) {
+        sourceSets = emptyList()
+    }
+    toolVersion = "7.24.0"
+    isConsoleOutput = true
+    ruleSets = listOf("category/java/errorprone.xml", "category/java/bestpractices.xml")
+    if (project.name == "anthropic-java-example") {
+        // These runnable examples intentionally print the SDK response and usage status.
+        ruleSets = emptyList()
+        ruleSetConfig = resources.text.fromString(
+            """
+            <ruleset name="M3 command-line example quality"
+                     xmlns="http://pmd.sourceforge.net/ruleset/2.0.0">
+                <description>Keep error-prone and best-practice checks for runnable examples.</description>
+                <rule ref="category/java/errorprone.xml"/>
+                <rule ref="category/java/bestpractices.xml">
+                    <exclude name="SystemPrintln"/>
+                </rule>
+            </ruleset>
+            """.trimIndent()
+        )
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.15"
+}
+
+tasks.withType<Checkstyle>().configureEach {
+    val qualityEnabled = m3QualityEnabled.get()
+    onlyIf { qualityEnabled }
+    reports.xml.required.set(true)
+}
+tasks.withType<Pmd>().configureEach {
+    val qualityEnabled = m3QualityEnabled.get()
+    onlyIf { qualityEnabled }
+    reports.xml.required.set(true)
+}
+tasks.withType<Test>().configureEach {
+    extensions.findByType(JacocoTaskExtension::class.java)?.isEnabled = m3QualityEnabled.get()
+}
+tasks.withType<JacocoReport>().configureEach {
+    val qualityEnabled = m3QualityEnabled.get()
+    onlyIf { qualityEnabled }
+    dependsOn(tasks.named("test"))
+    reports.xml.required.set(true)
+}
+
+tasks.register("m3Quality") {
+    group = "Verification"
+    description = "Runs read-only Java Checkstyle, PMD and JaCoCo quality checks (set -Pm3Quality=true)."
+    dependsOn("checkstyleMain", "checkstyleTest", "pmdMain", "pmdTest", "jacocoTestReport")
+}
