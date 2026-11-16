@@ -3,12 +3,12 @@ package com.anthropic.services.blocking.beta.organization.rbacgroups
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
+import com.anthropic.models.beta.organization.rbacgroups.members.BetaDeletedRbacGroupMember
 import com.anthropic.models.beta.organization.rbacgroups.members.BetaRbacGroupMember
 import com.anthropic.models.beta.organization.rbacgroups.members.MemberAddParams
 import com.anthropic.models.beta.organization.rbacgroups.members.MemberListPage
 import com.anthropic.models.beta.organization.rbacgroups.members.MemberListParams
 import com.anthropic.models.beta.organization.rbacgroups.members.MemberRemoveParams
-import com.anthropic.models.beta.organization.rbacgroups.members.MemberRemoveResponse
 import com.google.errorprone.annotations.MustBeClosed
 import java.util.function.Consumer
 
@@ -65,6 +65,10 @@ interface MemberService {
      * provisioning.
      *
      * The RBAC Groups API is available to Claude Enterprise organizations only.
+     *
+     * @throws com.anthropic.models.organization.rbacgroups.RbacGroupGrantsOwnerAccessException
+     * @throws com.anthropic.models.organization.rbacgroups.RbacGroupOwnerAccessUnconfirmedException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun add(rbacGroupId: String, params: MemberAddParams): BetaRbacGroupMember =
         add(rbacGroupId, params, RequestOptions.none())
@@ -92,8 +96,12 @@ interface MemberService {
      * uses SCIM provisioning.
      *
      * The RBAC Groups API is available to Claude Enterprise organizations only.
+     *
+     * @throws com.anthropic.models.organization.rbacgroups.RbacGroupGrantsOwnerAccessException
+     * @throws com.anthropic.models.organization.rbacgroups.RbacGroupOwnerAccessUnconfirmedException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
-    fun remove(userId: String, params: MemberRemoveParams): MemberRemoveResponse =
+    fun remove(userId: String, params: MemberRemoveParams): BetaDeletedRbacGroupMember =
         remove(userId, params, RequestOptions.none())
 
     /** @see remove */
@@ -101,17 +109,18 @@ interface MemberService {
         userId: String,
         params: MemberRemoveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): MemberRemoveResponse = remove(params.toBuilder().userId(userId).build(), requestOptions)
+    ): BetaDeletedRbacGroupMember =
+        remove(params.toBuilder().userId(userId).build(), requestOptions)
 
     /** @see remove */
-    fun remove(params: MemberRemoveParams): MemberRemoveResponse =
+    fun remove(params: MemberRemoveParams): BetaDeletedRbacGroupMember =
         remove(params, RequestOptions.none())
 
     /** @see remove */
     fun remove(
         params: MemberRemoveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): MemberRemoveResponse
+    ): BetaDeletedRbacGroupMember
 
     /** A view of [MemberService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -209,7 +218,8 @@ interface MemberService {
         fun remove(
             userId: String,
             params: MemberRemoveParams,
-        ): HttpResponseFor<MemberRemoveResponse> = remove(userId, params, RequestOptions.none())
+        ): HttpResponseFor<BetaDeletedRbacGroupMember> =
+            remove(userId, params, RequestOptions.none())
 
         /** @see remove */
         @MustBeClosed
@@ -217,12 +227,12 @@ interface MemberService {
             userId: String,
             params: MemberRemoveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<MemberRemoveResponse> =
+        ): HttpResponseFor<BetaDeletedRbacGroupMember> =
             remove(params.toBuilder().userId(userId).build(), requestOptions)
 
         /** @see remove */
         @MustBeClosed
-        fun remove(params: MemberRemoveParams): HttpResponseFor<MemberRemoveResponse> =
+        fun remove(params: MemberRemoveParams): HttpResponseFor<BetaDeletedRbacGroupMember> =
             remove(params, RequestOptions.none())
 
         /** @see remove */
@@ -230,6 +240,6 @@ interface MemberService {
         fun remove(
             params: MemberRemoveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<MemberRemoveResponse>
+        ): HttpResponseFor<BetaDeletedRbacGroupMember>
     }
 }

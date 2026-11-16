@@ -29,6 +29,8 @@ interface EffectiveServiceAsync {
      * scope the spend limit was inherited from. Paginates by member, so a member's periods never
      * split across pages. Supported for Claude Enterprise organizations only, not for Claude
      * Console organizations.
+     *
+     * @throws com.anthropic.models.OrganizationTypeNotSupportedException
      */
     fun list(): CompletableFuture<EffectiveListPageAsync> = list(EffectiveListParams.none())
 

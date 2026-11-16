@@ -27,7 +27,15 @@ interface VersionServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): VersionServiceAsync
 
-    /** Create Skill Version */
+    /**
+     * Create Skill Version
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.CmekKeyDisabledException
+     * @throws com.anthropic.models.CmekKeyNetworkBlockedException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     * @throws com.anthropic.models.CmekContextUnavailableException
+     */
     fun create(skillId: String, params: VersionCreateParams): CompletableFuture<SkillVersion> =
         create(skillId, params, RequestOptions.none())
 
@@ -49,7 +57,12 @@ interface VersionServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<SkillVersion>
 
-    /** Get Skill Version */
+    /**
+     * Get Skill Version
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun retrieve(version: String, params: VersionRetrieveParams): CompletableFuture<SkillVersion> =
         retrieve(version, params, RequestOptions.none())
 
@@ -71,7 +84,12 @@ interface VersionServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<SkillVersion>
 
-    /** List Skill Versions */
+    /**
+     * List Skill Versions
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun list(skillId: String): CompletableFuture<VersionListPageAsync> =
         list(skillId, VersionListParams.none())
 
@@ -106,7 +124,12 @@ interface VersionServiceAsync {
     ): CompletableFuture<VersionListPageAsync> =
         list(skillId, VersionListParams.none(), requestOptions)
 
-    /** Delete Skill Version */
+    /**
+     * Delete Skill Version
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun delete(
         version: String,
         params: VersionDeleteParams,

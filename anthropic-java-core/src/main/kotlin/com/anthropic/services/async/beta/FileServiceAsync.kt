@@ -29,7 +29,14 @@ interface FileServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): FileServiceAsync
 
-    /** List Files */
+    /**
+     * List Files
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.CmekKeyDisabledException
+     * @throws com.anthropic.models.CmekKeyNetworkBlockedException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun list(): CompletableFuture<FileListPageAsync> = list(FileListParams.none())
 
     /** @see list */
@@ -46,7 +53,14 @@ interface FileServiceAsync {
     fun list(requestOptions: RequestOptions): CompletableFuture<FileListPageAsync> =
         list(FileListParams.none(), requestOptions)
 
-    /** Delete File */
+    /**
+     * Delete File
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.CmekKeyDisabledException
+     * @throws com.anthropic.models.CmekKeyNetworkBlockedException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun delete(fileId: String): CompletableFuture<BetaDeletedFile> =
         delete(fileId, FileDeleteParams.none())
 
@@ -78,7 +92,16 @@ interface FileServiceAsync {
     fun delete(fileId: String, requestOptions: RequestOptions): CompletableFuture<BetaDeletedFile> =
         delete(fileId, FileDeleteParams.none(), requestOptions)
 
-    /** Download File */
+    /**
+     * Download File
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.CmekKeyDisabledException
+     * @throws com.anthropic.models.CmekKeyNetworkBlockedException
+     * @throws com.anthropic.models.files.FileNotDownloadableException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     * @throws com.anthropic.models.files.FileExpiredException
+     */
     fun download(fileId: String): CompletableFuture<HttpResponse> =
         download(fileId, FileDownloadParams.none())
 
@@ -110,7 +133,14 @@ interface FileServiceAsync {
     fun download(fileId: String, requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
         download(fileId, FileDownloadParams.none(), requestOptions)
 
-    /** Get File Metadata */
+    /**
+     * Get File Metadata
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.CmekKeyDisabledException
+     * @throws com.anthropic.models.CmekKeyNetworkBlockedException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun retrieveMetadata(fileId: String): CompletableFuture<BetaFileMetadata> =
         retrieveMetadata(fileId, FileRetrieveMetadataParams.none())
 
@@ -145,7 +175,15 @@ interface FileServiceAsync {
     ): CompletableFuture<BetaFileMetadata> =
         retrieveMetadata(fileId, FileRetrieveMetadataParams.none(), requestOptions)
 
-    /** Upload File */
+    /**
+     * Upload File
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.CmekKeyDisabledException
+     * @throws com.anthropic.models.CmekKeyNetworkBlockedException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     * @throws com.anthropic.models.files.StorageQuotaExceededException
+     */
     fun upload(params: FileUploadParams): CompletableFuture<BetaFileMetadata> =
         upload(params, RequestOptions.none())
 

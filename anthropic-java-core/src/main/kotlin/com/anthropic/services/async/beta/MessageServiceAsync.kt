@@ -46,6 +46,36 @@ interface MessageServiceAsync {
      *
      * Learn more about the Messages API in our
      * [user guide](https://platform.claude.com/docs/en/get-started)
+     *
+     * @throws com.anthropic.models.messages.AvailableToolsLimitExceededException
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.ClaudeCodeVersionTooOldException
+     * @throws com.anthropic.models.CmekKeyDisabledException
+     * @throws com.anthropic.models.CmekKeyNetworkBlockedException
+     * @throws com.anthropic.models.messages.CompactionBlockAmbiguousException
+     * @throws com.anthropic.models.messages.CompactionBlockMisplacedException
+     * @throws com.anthropic.models.messages.CompactionContentMismatchException
+     * @throws com.anthropic.models.messages.CompactionIncompleteTurnException
+     * @throws com.anthropic.models.messages.CompactionNothingToSummarizeException
+     * @throws com.anthropic.models.messages.CompactionSignatureInvalidException
+     * @throws com.anthropic.models.messages.CompactionTooManyToolReferencesException
+     * @throws com.anthropic.models.messages.CompactionToolChangesMismatchException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     * @throws com.anthropic.models.RequestBodyEncodingInvalidException
+     * @throws com.anthropic.models.RequestBodyEncodingUnsupportedException
+     * @throws com.anthropic.models.messages.ThreadAlreadyContinuedException
+     * @throws com.anthropic.models.messages.ThreadContinueInFlightException
+     * @throws com.anthropic.models.messages.ThreadFingerprintMismatchException
+     * @throws com.anthropic.models.messages.ThreadUnsupportedRequestException
+     * @throws com.anthropic.models.messages.ToolNameConflictException
+     * @throws com.anthropic.models.messages.ToolReferenceUnresolvedException
+     * @throws com.anthropic.models.messages.ThreadNotFoundException
+     * @throws com.anthropic.models.skills.SkillReadBlockedUndecryptableException
+     * @throws com.anthropic.models.RequestBodyTooLargeAfterDecodingException
+     * @throws com.anthropic.models.EnforcedSpendLimitReachedException
+     * @throws com.anthropic.models.RampLimitExceededException
+     * @throws com.anthropic.models.CmekKeyUnreachableException
+     * @throws com.anthropic.models.messages.CompactionUnavailableException
      */
     fun create(params: MessageCreateParams): CompletableFuture<BetaMessage> =
         create(params, RequestOptions.none())
@@ -90,6 +120,36 @@ interface MessageServiceAsync {
      *
      * Learn more about the Messages API in our
      * [user guide](https://platform.claude.com/docs/en/get-started)
+     *
+     * @throws com.anthropic.models.messages.AvailableToolsLimitExceededException
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.ClaudeCodeVersionTooOldException
+     * @throws com.anthropic.models.CmekKeyDisabledException
+     * @throws com.anthropic.models.CmekKeyNetworkBlockedException
+     * @throws com.anthropic.models.messages.CompactionBlockAmbiguousException
+     * @throws com.anthropic.models.messages.CompactionBlockMisplacedException
+     * @throws com.anthropic.models.messages.CompactionContentMismatchException
+     * @throws com.anthropic.models.messages.CompactionIncompleteTurnException
+     * @throws com.anthropic.models.messages.CompactionNothingToSummarizeException
+     * @throws com.anthropic.models.messages.CompactionSignatureInvalidException
+     * @throws com.anthropic.models.messages.CompactionTooManyToolReferencesException
+     * @throws com.anthropic.models.messages.CompactionToolChangesMismatchException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     * @throws com.anthropic.models.RequestBodyEncodingInvalidException
+     * @throws com.anthropic.models.RequestBodyEncodingUnsupportedException
+     * @throws com.anthropic.models.messages.ThreadAlreadyContinuedException
+     * @throws com.anthropic.models.messages.ThreadContinueInFlightException
+     * @throws com.anthropic.models.messages.ThreadFingerprintMismatchException
+     * @throws com.anthropic.models.messages.ThreadUnsupportedRequestException
+     * @throws com.anthropic.models.messages.ToolNameConflictException
+     * @throws com.anthropic.models.messages.ToolReferenceUnresolvedException
+     * @throws com.anthropic.models.messages.ThreadNotFoundException
+     * @throws com.anthropic.models.skills.SkillReadBlockedUndecryptableException
+     * @throws com.anthropic.models.RequestBodyTooLargeAfterDecodingException
+     * @throws com.anthropic.models.EnforcedSpendLimitReachedException
+     * @throws com.anthropic.models.RampLimitExceededException
+     * @throws com.anthropic.models.CmekKeyUnreachableException
+     * @throws com.anthropic.models.messages.CompactionUnavailableException
      */
     fun createStreaming(
         params: MessageCreateParams
@@ -168,6 +228,23 @@ interface MessageServiceAsync {
      *
      * Learn more about token counting in our
      * [user guide](https://platform.claude.com/docs/en/build-with-claude/token-counting)
+     *
+     * @throws com.anthropic.models.messages.AvailableToolsLimitExceededException
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.messages.CompactionBlockAmbiguousException
+     * @throws com.anthropic.models.messages.CompactionBlockMisplacedException
+     * @throws com.anthropic.models.messages.CompactionContentMismatchException
+     * @throws com.anthropic.models.messages.CompactionNothingToSummarizeException
+     * @throws com.anthropic.models.messages.CompactionSignatureInvalidException
+     * @throws com.anthropic.models.messages.CompactionToolChangesMismatchException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     * @throws com.anthropic.models.RequestBodyEncodingInvalidException
+     * @throws com.anthropic.models.RequestBodyEncodingUnsupportedException
+     * @throws com.anthropic.models.messages.ToolNameConflictException
+     * @throws com.anthropic.models.messages.ToolReferenceUnresolvedException
+     * @throws com.anthropic.models.RequestBodyTooLargeAfterDecodingException
+     * @throws com.anthropic.models.EnforcedSpendLimitReachedException
+     * @throws com.anthropic.models.messages.CompactionUnavailableException
      */
     fun countTokens(params: MessageCountTokensParams): CompletableFuture<BetaMessageTokensCount> =
         countTokens(params, RequestOptions.none())

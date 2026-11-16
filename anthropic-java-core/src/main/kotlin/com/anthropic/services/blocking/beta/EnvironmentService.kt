@@ -32,7 +32,13 @@ interface EnvironmentService {
 
     fun work(): WorkService
 
-    /** Create a new environment with the specified configuration. */
+    /**
+     * Create a new environment with the specified configuration.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     * @throws com.anthropic.models.beta.environments.BetaEnvironmentCreateDisabledException
+     */
     fun create(params: EnvironmentCreateParams): BetaEnvironment =
         create(params, RequestOptions.none())
 
@@ -42,7 +48,12 @@ interface EnvironmentService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaEnvironment
 
-    /** Retrieve a specific environment by ID. */
+    /**
+     * Retrieve a specific environment by ID.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun retrieve(environmentId: String): BetaEnvironment =
         retrieve(environmentId, EnvironmentRetrieveParams.none())
 
@@ -74,7 +85,15 @@ interface EnvironmentService {
     fun retrieve(environmentId: String, requestOptions: RequestOptions): BetaEnvironment =
         retrieve(environmentId, EnvironmentRetrieveParams.none(), requestOptions)
 
-    /** Update an existing environment's configuration. */
+    /**
+     * Update an existing environment's configuration.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.beta.environments.BetaEnvironmentArchivedException
+     * @throws com.anthropic.models.beta.environments.BetaInvalidConfigTypeChangeException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     * @throws com.anthropic.models.beta.environments.BetaEnvironmentUpdateDisabledException
+     */
     fun update(environmentId: String): BetaEnvironment =
         update(environmentId, EnvironmentUpdateParams.none())
 
@@ -106,7 +125,12 @@ interface EnvironmentService {
     fun update(environmentId: String, requestOptions: RequestOptions): BetaEnvironment =
         update(environmentId, EnvironmentUpdateParams.none(), requestOptions)
 
-    /** List environments with pagination support. */
+    /**
+     * List environments with pagination support.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun list(): EnvironmentListPage = list(EnvironmentListParams.none())
 
     /** @see list */
@@ -123,7 +147,12 @@ interface EnvironmentService {
     fun list(requestOptions: RequestOptions): EnvironmentListPage =
         list(EnvironmentListParams.none(), requestOptions)
 
-    /** Delete an environment by ID. Returns a confirmation of the deletion. */
+    /**
+     * Delete an environment by ID. Returns a confirmation of the deletion.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun delete(environmentId: String): BetaEnvironmentDeleteResponse =
         delete(environmentId, EnvironmentDeleteParams.none())
 
@@ -160,6 +189,9 @@ interface EnvironmentService {
 
     /**
      * Archive an environment by ID. Archived environments cannot be used to create new sessions.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
      */
     fun archive(environmentId: String): BetaEnvironment =
         archive(environmentId, EnvironmentArchiveParams.none())

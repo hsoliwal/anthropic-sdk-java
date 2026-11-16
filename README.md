@@ -1,8 +1,8 @@
-# Claude SDK for Java
+# Anthropic SDK for Java
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.anthropic/anthropic-java)](https://central.sonatype.com/artifact/com.anthropic/anthropic-java)
 
-The Claude SDK for Java provides access to the [Claude API](https://docs.anthropic.com/en/api/) from Java applications.
+The Anthropic SDK for Java provides access to the [Claude API](https://docs.anthropic.com/en/api/) from Java applications.
 
 ## Documentation
 
@@ -15,7 +15,7 @@ Full documentation is available at **[platform.claude.com/docs/en/api/sdks/java]
 ### Gradle
 
 ```kotlin
-implementation("com.anthropic:anthropic-java:3.3.0")
+implementation("com.anthropic:anthropic-java:3.8.0")
 ```
 
 ### Maven
@@ -24,7 +24,7 @@ implementation("com.anthropic:anthropic-java:3.3.0")
 <dependency>
   <groupId>com.anthropic</groupId>
   <artifactId>anthropic-java</artifactId>
-  <version>3.3.0</version>
+  <version>3.8.0</version>
 </dependency>
 ```
 

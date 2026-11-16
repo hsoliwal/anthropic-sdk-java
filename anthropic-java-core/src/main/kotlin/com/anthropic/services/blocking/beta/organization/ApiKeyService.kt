@@ -54,7 +54,13 @@ interface ApiKeyService {
     fun retrieve(apiKeyId: String, requestOptions: RequestOptions): BetaApiKey =
         retrieve(apiKeyId, ApiKeyRetrieveParams.none(), requestOptions)
 
-    /** Update API Key */
+    /**
+     * Update API Key
+     *
+     * @throws com.anthropic.models.organization.apikeys.OrgApiKeyLimitExceededException
+     * @throws com.anthropic.models.organization.apikeys.WorkspaceApiKeyLimitExceededException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
+     */
     fun update(apiKeyId: String): BetaApiKey = update(apiKeyId, ApiKeyUpdateParams.none())
 
     /** @see update */

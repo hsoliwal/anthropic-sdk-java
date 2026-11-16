@@ -3,10 +3,10 @@ package com.anthropic.services.blocking.beta.organization
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
+import com.anthropic.models.beta.organization.rbacgroups.BetaDeletedRbacGroup
 import com.anthropic.models.beta.organization.rbacgroups.BetaRbacGroup
 import com.anthropic.models.beta.organization.rbacgroups.RbacGroupCreateParams
 import com.anthropic.models.beta.organization.rbacgroups.RbacGroupDeleteParams
-import com.anthropic.models.beta.organization.rbacgroups.RbacGroupDeleteResponse
 import com.anthropic.models.beta.organization.rbacgroups.RbacGroupListPage
 import com.anthropic.models.beta.organization.rbacgroups.RbacGroupListParams
 import com.anthropic.models.beta.organization.rbacgroups.RbacGroupRetrieveParams
@@ -36,6 +36,8 @@ interface RbacGroupService {
      * type `"direct"`.
      *
      * The RBAC Groups API is available to Claude Enterprise organizations only.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun create(params: RbacGroupCreateParams): BetaRbacGroup = create(params, RequestOptions.none())
 
@@ -86,6 +88,8 @@ interface RbacGroupService {
      * provisioning.
      *
      * The RBAC Groups API is available to Claude Enterprise organizations only.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun update(rbacGroupId: String): BetaRbacGroup =
         update(rbacGroupId, RbacGroupUpdateParams.none())
@@ -142,8 +146,12 @@ interface RbacGroupService {
      * cannot be deleted via the API while an organization in the tenant uses SCIM provisioning.
      *
      * The RBAC Groups API is available to Claude Enterprise organizations only.
+     *
+     * @throws com.anthropic.models.organization.rbacgroups.RbacGroupGrantsOwnerAccessException
+     * @throws com.anthropic.models.organization.rbacgroups.RbacGroupOwnerAccessUnconfirmedException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
-    fun delete(rbacGroupId: String): RbacGroupDeleteResponse =
+    fun delete(rbacGroupId: String): BetaDeletedRbacGroup =
         delete(rbacGroupId, RbacGroupDeleteParams.none())
 
     /** @see delete */
@@ -151,27 +159,27 @@ interface RbacGroupService {
         rbacGroupId: String,
         params: RbacGroupDeleteParams = RbacGroupDeleteParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): RbacGroupDeleteResponse =
+    ): BetaDeletedRbacGroup =
         delete(params.toBuilder().rbacGroupId(rbacGroupId).build(), requestOptions)
 
     /** @see delete */
     fun delete(
         rbacGroupId: String,
         params: RbacGroupDeleteParams = RbacGroupDeleteParams.none(),
-    ): RbacGroupDeleteResponse = delete(rbacGroupId, params, RequestOptions.none())
+    ): BetaDeletedRbacGroup = delete(rbacGroupId, params, RequestOptions.none())
 
     /** @see delete */
     fun delete(
         params: RbacGroupDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): RbacGroupDeleteResponse
+    ): BetaDeletedRbacGroup
 
     /** @see delete */
-    fun delete(params: RbacGroupDeleteParams): RbacGroupDeleteResponse =
+    fun delete(params: RbacGroupDeleteParams): BetaDeletedRbacGroup =
         delete(params, RequestOptions.none())
 
     /** @see delete */
-    fun delete(rbacGroupId: String, requestOptions: RequestOptions): RbacGroupDeleteResponse =
+    fun delete(rbacGroupId: String, requestOptions: RequestOptions): BetaDeletedRbacGroup =
         delete(rbacGroupId, RbacGroupDeleteParams.none(), requestOptions)
 
     /** A view of [RbacGroupService] that provides access to raw HTTP responses for each method. */
@@ -319,7 +327,7 @@ interface RbacGroupService {
          * but is otherwise the same as [RbacGroupService.delete].
          */
         @MustBeClosed
-        fun delete(rbacGroupId: String): HttpResponseFor<RbacGroupDeleteResponse> =
+        fun delete(rbacGroupId: String): HttpResponseFor<BetaDeletedRbacGroup> =
             delete(rbacGroupId, RbacGroupDeleteParams.none())
 
         /** @see delete */
@@ -328,7 +336,7 @@ interface RbacGroupService {
             rbacGroupId: String,
             params: RbacGroupDeleteParams = RbacGroupDeleteParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<RbacGroupDeleteResponse> =
+        ): HttpResponseFor<BetaDeletedRbacGroup> =
             delete(params.toBuilder().rbacGroupId(rbacGroupId).build(), requestOptions)
 
         /** @see delete */
@@ -336,7 +344,7 @@ interface RbacGroupService {
         fun delete(
             rbacGroupId: String,
             params: RbacGroupDeleteParams = RbacGroupDeleteParams.none(),
-        ): HttpResponseFor<RbacGroupDeleteResponse> =
+        ): HttpResponseFor<BetaDeletedRbacGroup> =
             delete(rbacGroupId, params, RequestOptions.none())
 
         /** @see delete */
@@ -344,11 +352,11 @@ interface RbacGroupService {
         fun delete(
             params: RbacGroupDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<RbacGroupDeleteResponse>
+        ): HttpResponseFor<BetaDeletedRbacGroup>
 
         /** @see delete */
         @MustBeClosed
-        fun delete(params: RbacGroupDeleteParams): HttpResponseFor<RbacGroupDeleteResponse> =
+        fun delete(params: RbacGroupDeleteParams): HttpResponseFor<BetaDeletedRbacGroup> =
             delete(params, RequestOptions.none())
 
         /** @see delete */
@@ -356,7 +364,7 @@ interface RbacGroupService {
         fun delete(
             rbacGroupId: String,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<RbacGroupDeleteResponse> =
+        ): HttpResponseFor<BetaDeletedRbacGroup> =
             delete(rbacGroupId, RbacGroupDeleteParams.none(), requestOptions)
     }
 }

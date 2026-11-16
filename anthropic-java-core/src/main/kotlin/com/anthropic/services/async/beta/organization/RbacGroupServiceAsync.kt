@@ -3,10 +3,10 @@ package com.anthropic.services.async.beta.organization
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
+import com.anthropic.models.beta.organization.rbacgroups.BetaDeletedRbacGroup
 import com.anthropic.models.beta.organization.rbacgroups.BetaRbacGroup
 import com.anthropic.models.beta.organization.rbacgroups.RbacGroupCreateParams
 import com.anthropic.models.beta.organization.rbacgroups.RbacGroupDeleteParams
-import com.anthropic.models.beta.organization.rbacgroups.RbacGroupDeleteResponse
 import com.anthropic.models.beta.organization.rbacgroups.RbacGroupListPageAsync
 import com.anthropic.models.beta.organization.rbacgroups.RbacGroupListParams
 import com.anthropic.models.beta.organization.rbacgroups.RbacGroupRetrieveParams
@@ -36,6 +36,8 @@ interface RbacGroupServiceAsync {
      * type `"direct"`.
      *
      * The RBAC Groups API is available to Claude Enterprise organizations only.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun create(params: RbacGroupCreateParams): CompletableFuture<BetaRbacGroup> =
         create(params, RequestOptions.none())
@@ -91,6 +93,8 @@ interface RbacGroupServiceAsync {
      * provisioning.
      *
      * The RBAC Groups API is available to Claude Enterprise organizations only.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun update(rbacGroupId: String): CompletableFuture<BetaRbacGroup> =
         update(rbacGroupId, RbacGroupUpdateParams.none())
@@ -153,8 +157,12 @@ interface RbacGroupServiceAsync {
      * cannot be deleted via the API while an organization in the tenant uses SCIM provisioning.
      *
      * The RBAC Groups API is available to Claude Enterprise organizations only.
+     *
+     * @throws com.anthropic.models.organization.rbacgroups.RbacGroupGrantsOwnerAccessException
+     * @throws com.anthropic.models.organization.rbacgroups.RbacGroupOwnerAccessUnconfirmedException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
-    fun delete(rbacGroupId: String): CompletableFuture<RbacGroupDeleteResponse> =
+    fun delete(rbacGroupId: String): CompletableFuture<BetaDeletedRbacGroup> =
         delete(rbacGroupId, RbacGroupDeleteParams.none())
 
     /** @see delete */
@@ -162,31 +170,30 @@ interface RbacGroupServiceAsync {
         rbacGroupId: String,
         params: RbacGroupDeleteParams = RbacGroupDeleteParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<RbacGroupDeleteResponse> =
+    ): CompletableFuture<BetaDeletedRbacGroup> =
         delete(params.toBuilder().rbacGroupId(rbacGroupId).build(), requestOptions)
 
     /** @see delete */
     fun delete(
         rbacGroupId: String,
         params: RbacGroupDeleteParams = RbacGroupDeleteParams.none(),
-    ): CompletableFuture<RbacGroupDeleteResponse> =
-        delete(rbacGroupId, params, RequestOptions.none())
+    ): CompletableFuture<BetaDeletedRbacGroup> = delete(rbacGroupId, params, RequestOptions.none())
 
     /** @see delete */
     fun delete(
         params: RbacGroupDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<RbacGroupDeleteResponse>
+    ): CompletableFuture<BetaDeletedRbacGroup>
 
     /** @see delete */
-    fun delete(params: RbacGroupDeleteParams): CompletableFuture<RbacGroupDeleteResponse> =
+    fun delete(params: RbacGroupDeleteParams): CompletableFuture<BetaDeletedRbacGroup> =
         delete(params, RequestOptions.none())
 
     /** @see delete */
     fun delete(
         rbacGroupId: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<RbacGroupDeleteResponse> =
+    ): CompletableFuture<BetaDeletedRbacGroup> =
         delete(rbacGroupId, RbacGroupDeleteParams.none(), requestOptions)
 
     /**
@@ -329,9 +336,7 @@ interface RbacGroupServiceAsync {
          * Returns a raw HTTP response for `delete /v1/organizations/rbac_groups/{rbac_group_id}`,
          * but is otherwise the same as [RbacGroupServiceAsync.delete].
          */
-        fun delete(
-            rbacGroupId: String
-        ): CompletableFuture<HttpResponseFor<RbacGroupDeleteResponse>> =
+        fun delete(rbacGroupId: String): CompletableFuture<HttpResponseFor<BetaDeletedRbacGroup>> =
             delete(rbacGroupId, RbacGroupDeleteParams.none())
 
         /** @see delete */
@@ -339,33 +344,33 @@ interface RbacGroupServiceAsync {
             rbacGroupId: String,
             params: RbacGroupDeleteParams = RbacGroupDeleteParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<RbacGroupDeleteResponse>> =
+        ): CompletableFuture<HttpResponseFor<BetaDeletedRbacGroup>> =
             delete(params.toBuilder().rbacGroupId(rbacGroupId).build(), requestOptions)
 
         /** @see delete */
         fun delete(
             rbacGroupId: String,
             params: RbacGroupDeleteParams = RbacGroupDeleteParams.none(),
-        ): CompletableFuture<HttpResponseFor<RbacGroupDeleteResponse>> =
+        ): CompletableFuture<HttpResponseFor<BetaDeletedRbacGroup>> =
             delete(rbacGroupId, params, RequestOptions.none())
 
         /** @see delete */
         fun delete(
             params: RbacGroupDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<RbacGroupDeleteResponse>>
+        ): CompletableFuture<HttpResponseFor<BetaDeletedRbacGroup>>
 
         /** @see delete */
         fun delete(
             params: RbacGroupDeleteParams
-        ): CompletableFuture<HttpResponseFor<RbacGroupDeleteResponse>> =
+        ): CompletableFuture<HttpResponseFor<BetaDeletedRbacGroup>> =
             delete(params, RequestOptions.none())
 
         /** @see delete */
         fun delete(
             rbacGroupId: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<RbacGroupDeleteResponse>> =
+        ): CompletableFuture<HttpResponseFor<BetaDeletedRbacGroup>> =
             delete(rbacGroupId, RbacGroupDeleteParams.none(), requestOptions)
     }
 }

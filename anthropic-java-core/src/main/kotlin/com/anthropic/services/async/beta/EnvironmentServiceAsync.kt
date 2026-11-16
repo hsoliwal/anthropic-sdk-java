@@ -32,7 +32,13 @@ interface EnvironmentServiceAsync {
 
     fun work(): WorkServiceAsync
 
-    /** Create a new environment with the specified configuration. */
+    /**
+     * Create a new environment with the specified configuration.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     * @throws com.anthropic.models.beta.environments.BetaEnvironmentCreateDisabledException
+     */
     fun create(params: EnvironmentCreateParams): CompletableFuture<BetaEnvironment> =
         create(params, RequestOptions.none())
 
@@ -42,7 +48,12 @@ interface EnvironmentServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BetaEnvironment>
 
-    /** Retrieve a specific environment by ID. */
+    /**
+     * Retrieve a specific environment by ID.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun retrieve(environmentId: String): CompletableFuture<BetaEnvironment> =
         retrieve(environmentId, EnvironmentRetrieveParams.none())
 
@@ -77,7 +88,15 @@ interface EnvironmentServiceAsync {
     ): CompletableFuture<BetaEnvironment> =
         retrieve(environmentId, EnvironmentRetrieveParams.none(), requestOptions)
 
-    /** Update an existing environment's configuration. */
+    /**
+     * Update an existing environment's configuration.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.beta.environments.BetaEnvironmentArchivedException
+     * @throws com.anthropic.models.beta.environments.BetaInvalidConfigTypeChangeException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     * @throws com.anthropic.models.beta.environments.BetaEnvironmentUpdateDisabledException
+     */
     fun update(environmentId: String): CompletableFuture<BetaEnvironment> =
         update(environmentId, EnvironmentUpdateParams.none())
 
@@ -112,7 +131,12 @@ interface EnvironmentServiceAsync {
     ): CompletableFuture<BetaEnvironment> =
         update(environmentId, EnvironmentUpdateParams.none(), requestOptions)
 
-    /** List environments with pagination support. */
+    /**
+     * List environments with pagination support.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun list(): CompletableFuture<EnvironmentListPageAsync> = list(EnvironmentListParams.none())
 
     /** @see list */
@@ -130,7 +154,12 @@ interface EnvironmentServiceAsync {
     fun list(requestOptions: RequestOptions): CompletableFuture<EnvironmentListPageAsync> =
         list(EnvironmentListParams.none(), requestOptions)
 
-    /** Delete an environment by ID. Returns a confirmation of the deletion. */
+    /**
+     * Delete an environment by ID. Returns a confirmation of the deletion.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun delete(environmentId: String): CompletableFuture<BetaEnvironmentDeleteResponse> =
         delete(environmentId, EnvironmentDeleteParams.none())
 
@@ -168,6 +197,9 @@ interface EnvironmentServiceAsync {
 
     /**
      * Archive an environment by ID. Archived environments cannot be used to create new sessions.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
      */
     fun archive(environmentId: String): CompletableFuture<BetaEnvironment> =
         archive(environmentId, EnvironmentArchiveParams.none())

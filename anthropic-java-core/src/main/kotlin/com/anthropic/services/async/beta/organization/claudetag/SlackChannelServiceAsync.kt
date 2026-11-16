@@ -38,6 +38,21 @@ interface SlackChannelServiceAsync {
      * `settings` are two steps: when the second is refused, the response is the refusal, the
      * channel stays set up with every setting unset, and the error's `details.slack_channel_id`
      * holds the channel's identifier.
+     *
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpSettingsRefusedException
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
+     * @throws com.anthropic.models.beta.environments.BetaEnvironmentNotFoundException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpEnvironmentNotFoundException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpSettingsConflictException
      */
     fun create(params: SlackChannelCreateParams): CompletableFuture<BetaClaudeTagSlackChannel> =
         create(params, RequestOptions.none())
@@ -56,6 +71,14 @@ interface SlackChannelServiceAsync {
      * against a settings level that could not be read. Either way `sources` names the settings
      * level each value comes from, so a caller tells the channel's own value from an inherited one
      * by its source, not by whether it is null.
+     *
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
      */
     fun retrieve(id: String): CompletableFuture<BetaClaudeTagSlackChannel> =
         retrieve(id, SlackChannelRetrieveParams.none())
@@ -96,6 +119,19 @@ interface SlackChannelServiceAsync {
      * unchanged, and a setting sent as null is cleared, so the channel inherits it. If any value is
      * refused, no setting in the request is stored. A group direct message takes no settings and
      * returns 400.
+     *
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
+     * @throws com.anthropic.models.beta.environments.BetaEnvironmentNotFoundException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpEnvironmentNotFoundException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpSettingsConflictException
      */
     fun update(
         id: String,
@@ -130,6 +166,14 @@ interface SlackChannelServiceAsync {
      * applies in it, and the request fails with 503 rather than resolve against a settings level
      * that could not be read. A `page` cursor resumes only a request with the same
      * `include_inherited`.
+     *
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
      */
     fun list(params: SlackChannelListParams): CompletableFuture<SlackChannelListPageAsync> =
         list(params, RequestOptions.none())
@@ -153,6 +197,16 @@ interface SlackChannelServiceAsync {
      * set it up anew with a new identifier. The identifier returns 404 as soon as the request
      * returns, so a repeated removal returns 404. A group direct message returns 400, and so does a
      * channel that holds configuration this API does not manage.
+     *
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpSettingsConflictException
      */
     fun delete(id: String): CompletableFuture<BetaClaudeTagDeletedSlackChannel> =
         delete(id, SlackChannelDeleteParams.none())

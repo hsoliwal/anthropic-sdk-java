@@ -39,6 +39,9 @@ interface WorkService {
      * are included here as a reference; you do not need to invoke them directly.
      *
      * Retrieve detailed information about a specific work item.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
      */
     fun retrieve(workId: String, params: WorkRetrieveParams): BetaSelfHostedWork =
         retrieve(workId, params, RequestOptions.none())
@@ -66,6 +69,10 @@ interface WorkService {
      * are included here as a reference; you do not need to invoke them directly.
      *
      * Update work item metadata with merge semantics.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.beta.environments.BetaInvalidMetadataException
+     * @throws com.anthropic.models.OrganizationOnHoldException
      */
     fun update(workId: String, params: WorkUpdateParams): BetaSelfHostedWork =
         update(workId, params, RequestOptions.none())
@@ -152,6 +159,8 @@ interface WorkService {
      * are included here as a reference; you do not need to invoke them directly.
      *
      * Record a heartbeat for a work item to maintain the lease.
+     *
+     * @throws com.anthropic.models.beta.environments.work.BetaHeartbeatPreconditionFailedException
      */
     fun heartbeat(
         workId: String,
@@ -214,7 +223,12 @@ interface WorkService {
     fun poll(environmentId: String, requestOptions: RequestOptions): Optional<BetaSelfHostedWork> =
         poll(environmentId, WorkPollParams.none(), requestOptions)
 
-    /** Get statistics about the work queue for an environment. */
+    /**
+     * Get statistics about the work queue for an environment.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun stats(environmentId: String): BetaSelfHostedWorkQueueStats =
         stats(environmentId, WorkStatsParams.none())
 
@@ -252,6 +266,9 @@ interface WorkService {
      * are included here as a reference; you do not need to invoke them directly.
      *
      * Stop a work item, initiating graceful or forced shutdown.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
      */
     fun stop(workId: String, params: WorkStopParams): BetaSelfHostedWork =
         stop(workId, params, RequestOptions.none())

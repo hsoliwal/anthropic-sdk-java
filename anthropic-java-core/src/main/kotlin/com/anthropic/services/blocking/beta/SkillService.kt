@@ -30,7 +30,15 @@ interface SkillService {
 
     fun versions(): VersionService
 
-    /** Create Skill */
+    /**
+     * Create Skill
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.CmekKeyDisabledException
+     * @throws com.anthropic.models.CmekKeyNetworkBlockedException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     * @throws com.anthropic.models.CmekContextUnavailableException
+     */
     fun create(params: SkillCreateParams): BetaSkill = create(params, RequestOptions.none())
 
     /** @see create */
@@ -39,7 +47,12 @@ interface SkillService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaSkill
 
-    /** Get Skill */
+    /**
+     * Get Skill
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun retrieve(skillId: String): BetaSkill = retrieve(skillId, SkillRetrieveParams.none())
 
     /** @see retrieve */
@@ -68,7 +81,12 @@ interface SkillService {
     fun retrieve(skillId: String, requestOptions: RequestOptions): BetaSkill =
         retrieve(skillId, SkillRetrieveParams.none(), requestOptions)
 
-    /** List Skills */
+    /**
+     * List Skills
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun list(): SkillListPage = list(SkillListParams.none())
 
     /** @see list */
@@ -85,7 +103,12 @@ interface SkillService {
     fun list(requestOptions: RequestOptions): SkillListPage =
         list(SkillListParams.none(), requestOptions)
 
-    /** Delete Skill */
+    /**
+     * Delete Skill
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun delete(skillId: String): BetaDeletedSkill = delete(skillId, SkillDeleteParams.none())
 
     /** @see delete */

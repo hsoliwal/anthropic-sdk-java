@@ -29,7 +29,14 @@ interface FileService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): FileService
 
-    /** List Files */
+    /**
+     * List Files
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.CmekKeyDisabledException
+     * @throws com.anthropic.models.CmekKeyNetworkBlockedException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun list(): FileListPage = list(FileListParams.none())
 
     /** @see list */
@@ -46,7 +53,14 @@ interface FileService {
     fun list(requestOptions: RequestOptions): FileListPage =
         list(FileListParams.none(), requestOptions)
 
-    /** Delete File */
+    /**
+     * Delete File
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.CmekKeyDisabledException
+     * @throws com.anthropic.models.CmekKeyNetworkBlockedException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun delete(fileId: String): DeletedFile = delete(fileId, FileDeleteParams.none())
 
     /** @see delete */
@@ -73,7 +87,16 @@ interface FileService {
     fun delete(fileId: String, requestOptions: RequestOptions): DeletedFile =
         delete(fileId, FileDeleteParams.none(), requestOptions)
 
-    /** Download File */
+    /**
+     * Download File
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.CmekKeyDisabledException
+     * @throws com.anthropic.models.CmekKeyNetworkBlockedException
+     * @throws com.anthropic.models.files.FileNotDownloadableException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     * @throws com.anthropic.models.files.FileExpiredException
+     */
     @MustBeClosed
     fun download(fileId: String): HttpResponse = download(fileId, FileDownloadParams.none())
 
@@ -108,7 +131,14 @@ interface FileService {
     fun download(fileId: String, requestOptions: RequestOptions): HttpResponse =
         download(fileId, FileDownloadParams.none(), requestOptions)
 
-    /** Get File Metadata */
+    /**
+     * Get File Metadata
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.CmekKeyDisabledException
+     * @throws com.anthropic.models.CmekKeyNetworkBlockedException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun retrieveMetadata(fileId: String): FileMetadata =
         retrieveMetadata(fileId, FileRetrieveMetadataParams.none())
 
@@ -139,7 +169,15 @@ interface FileService {
     fun retrieveMetadata(fileId: String, requestOptions: RequestOptions): FileMetadata =
         retrieveMetadata(fileId, FileRetrieveMetadataParams.none(), requestOptions)
 
-    /** Upload File */
+    /**
+     * Upload File
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.CmekKeyDisabledException
+     * @throws com.anthropic.models.CmekKeyNetworkBlockedException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     * @throws com.anthropic.models.files.StorageQuotaExceededException
+     */
     fun upload(params: FileUploadParams): FileMetadata = upload(params, RequestOptions.none())
 
     /** @see upload */

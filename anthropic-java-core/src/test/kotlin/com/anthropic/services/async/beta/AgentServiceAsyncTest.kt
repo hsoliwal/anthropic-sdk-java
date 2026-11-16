@@ -15,8 +15,14 @@ import com.anthropic.models.beta.agents.BetaManagedAgentsAnthropicSkillParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsBashToolConfigParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsModel
 import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfigParams
+import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagent20261001Params
+import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentAdvisorDisabledParams
+import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentInlineAgentsDisabledParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentSelfParams
+import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentSubagentsEnabledParams
+import com.anthropic.models.beta.agents.BetaManagedAgentsMultiagentWorkflowsEnabledParams
 import com.anthropic.models.beta.agents.BetaManagedAgentsUrlMcpServerParams
+import com.anthropic.models.beta.sessions.BetaManagedAgentsAgentParams
 import com.anthropic.models.beta.sessions.BetaManagedAgentsMultiagentRosterEntryParams
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -43,7 +49,7 @@ internal class AgentServiceAsyncTest {
                     .model(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                     .name("My First Agent")
                     .description("A general-purpose starter agent.")
-                    .awsRoleExecutionIdentity("role_arn")
+                    .awsRoleExecutionIdentity("arn:aws:iam::228601553692:role/T")
                     .addMcpServer(
                         BetaManagedAgentsUrlMcpServerParams.builder()
                             .name("example-mcp")
@@ -55,15 +61,37 @@ internal class AgentServiceAsyncTest {
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
                             .build()
                     )
-                    .coordinatorMultiagent(
-                        listOf(
-                            BetaManagedAgentsMultiagentRosterEntryParams.ofString(
-                                "agent_011CZkYqphY8vELVzwCUpqiQ"
-                            ),
-                            BetaManagedAgentsMultiagentRosterEntryParams.ofSelf(
-                                BetaManagedAgentsMultiagentSelfParams.builder().build()
-                            ),
-                        )
+                    .multiagent(
+                        BetaManagedAgentsMultiagent20261001Params.builder()
+                            .advisor(
+                                BetaManagedAgentsMultiagentAdvisorDisabledParams.builder().build()
+                            )
+                            .subagents(
+                                BetaManagedAgentsMultiagentSubagentsEnabledParams.builder()
+                                    .inlineAgents(
+                                        BetaManagedAgentsMultiagentInlineAgentsDisabledParams
+                                            .builder()
+                                            .build()
+                                    )
+                                    .addPredefinedAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                    .build()
+                            )
+                            .workflows(
+                                BetaManagedAgentsMultiagentWorkflowsEnabledParams.builder()
+                                    .inlineAgents(
+                                        BetaManagedAgentsMultiagentInlineAgentsDisabledParams
+                                            .builder()
+                                            .build()
+                                    )
+                                    .addPredefinedAgent(
+                                        BetaManagedAgentsAgentParams.builder()
+                                            .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                            .version(1)
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                            .build()
                     )
                     .addSkill(
                         BetaManagedAgentsAnthropicSkillParams.builder()
@@ -133,7 +161,7 @@ internal class AgentServiceAsyncTest {
                     .addBeta(AnthropicBeta.MESSAGE_BATCHES_2024_09_24)
                     .workspaceId("wrkspc_011CZkZaBF1tNoB5wlCeusgy")
                     .description("updated")
-                    .awsRoleExecutionIdentity("role_arn")
+                    .awsRoleExecutionIdentity("arn:aws:iam::228601553692:role/T")
                     .addMcpServer(
                         BetaManagedAgentsUrlMcpServerParams.builder()
                             .name("example-mcp")

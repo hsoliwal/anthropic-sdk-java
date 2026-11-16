@@ -39,6 +39,9 @@ interface WorkServiceAsync {
      * are included here as a reference; you do not need to invoke them directly.
      *
      * Retrieve detailed information about a specific work item.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
      */
     fun retrieve(
         workId: String,
@@ -69,6 +72,10 @@ interface WorkServiceAsync {
      * are included here as a reference; you do not need to invoke them directly.
      *
      * Update work item metadata with merge semantics.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.beta.environments.BetaInvalidMetadataException
+     * @throws com.anthropic.models.OrganizationOnHoldException
      */
     fun update(workId: String, params: WorkUpdateParams): CompletableFuture<BetaSelfHostedWork> =
         update(workId, params, RequestOptions.none())
@@ -167,6 +174,8 @@ interface WorkServiceAsync {
      * are included here as a reference; you do not need to invoke them directly.
      *
      * Record a heartbeat for a work item to maintain the lease.
+     *
+     * @throws com.anthropic.models.beta.environments.work.BetaHeartbeatPreconditionFailedException
      */
     fun heartbeat(
         workId: String,
@@ -236,7 +245,12 @@ interface WorkServiceAsync {
     ): CompletableFuture<Optional<BetaSelfHostedWork>> =
         poll(environmentId, WorkPollParams.none(), requestOptions)
 
-    /** Get statistics about the work queue for an environment. */
+    /**
+     * Get statistics about the work queue for an environment.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun stats(environmentId: String): CompletableFuture<BetaSelfHostedWorkQueueStats> =
         stats(environmentId, WorkStatsParams.none())
 
@@ -278,6 +292,9 @@ interface WorkServiceAsync {
      * are included here as a reference; you do not need to invoke them directly.
      *
      * Stop a work item, initiating graceful or forced shutdown.
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
      */
     fun stop(workId: String, params: WorkStopParams): CompletableFuture<BetaSelfHostedWork> =
         stop(workId, params, RequestOptions.none())
