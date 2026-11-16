@@ -52,6 +52,7 @@ private constructor(
     private val models: List<String>?,
     private val order: BetaAnalyticsUsageCostSortOrder?,
     private val orderBy: BetaAnalyticsCostOrderBy?,
+    private val organizationIds: List<String>?,
     private val page: String?,
     private val products: List<BetaAnalyticsUsageCostProductFilter>?,
     private val rbacGroupIds: List<String>?,
@@ -91,8 +92,7 @@ private constructor(
 
     /**
      * Filter to usage incurred by sessions of specific Claude Managed Agents agents. Use
-     * `group_by[]=agent_id` to break out per-agent values. Claude Developer Platform organizations
-     * only.
+     * `group_by[]=agent_id` to break out per-agent values. Claude Platform organizations only.
      */
     fun agentIds(): Optional<List<String>> = Optional.ofNullable(agentIds)
 
@@ -100,16 +100,15 @@ private constructor(
      * Filter to usage authenticated by specific API keys, by tagged API key ID (`apikey_...`),
      * whichever identity the usage is attributed to. Include an empty entry (`api_key_ids[]=`) to
      * also match usage that no API key authenticated. Use `group_by[]=api_key_id` to break out
-     * per-key values; usage without a key has a null `api_key_id`. Claude Developer Platform
-     * organizations only.
+     * per-key values; usage without a key has a null `api_key_id`. Claude Platform organizations
+     * only.
      */
     fun apiKeyIds(): Optional<List<String>> = Optional.ofNullable(apiKeyIds)
 
     /**
      * Filter to Claude Tag (Claude in Slack) usage in specific spend categories. Usage with no
-     * category never matches. `dm` usage is reported under the user's product rather than
-     * `claude_tag`, so combining this filter with `products[]=claude_tag` excludes it. Use
-     * `group_by[]=claude_tag_category` to break out per-category values.
+     * category never matches. Use `group_by[]=claude_tag_category` to break out per-category
+     * values.
      */
     fun claudeTagCategories(): Optional<List<BetaAnalyticsClaudeTagCategory>> =
         Optional.ofNullable(claudeTagCategories)
@@ -131,7 +130,7 @@ private constructor(
 
     /**
      * Filter to usage incurred by Claude Managed Agents sessions that specific deployments started.
-     * Use `group_by[]=deployment_id` to break out per-deployment values. Claude Developer Platform
+     * Use `group_by[]=deployment_id` to break out per-deployment values. Claude Platform
      * organizations only.
      */
     fun deploymentIds(): Optional<List<String>> = Optional.ofNullable(deploymentIds)
@@ -145,8 +144,8 @@ private constructor(
 
     /**
      * Filter to usage incurred by Claude Managed Agents sessions that ran in specific environments.
-     * Use `group_by[]=environment_id` to break out per-environment values. Claude Developer
-     * Platform organizations only.
+     * Use `group_by[]=environment_id` to break out per-environment values. Claude Platform
+     * organizations only.
      */
     fun environmentIds(): Optional<List<String>> = Optional.ofNullable(environmentIds)
 
@@ -203,6 +202,14 @@ private constructor(
      */
     fun orderBy(): Optional<BetaAnalyticsCostOrderBy> = Optional.ofNullable(orderBy)
 
+    /**
+     * Filter a parent organization's report to specific child organizations, by organization UUID
+     * or `org_` ID; an ID that is not one of its child organizations matches nothing. Requires an
+     * API key created at the parent organization level. Use `group_by[]=organization_id` to break
+     * out per-organization values.
+     */
+    fun organizationIds(): Optional<List<String>> = Optional.ofNullable(organizationIds)
+
     /** Opaque cursor from a previous response's `next_page` field. */
     fun page(): Optional<String> = Optional.ofNullable(page)
 
@@ -220,15 +227,14 @@ private constructor(
 
     /**
      * Filter to specific service tiers. Use `group_by[]=service_tier` to break out per-tier values.
-     * Claude Developer Platform organizations only; matches nothing for a Claude Enterprise
-     * organization.
+     * Claude Platform organizations only; matches nothing for a Claude Enterprise organization.
      */
     fun serviceTiers(): Optional<List<BetaAnalyticsServiceTier>> = Optional.ofNullable(serviceTiers)
 
     /**
      * Filter to usage incurred by specific Claude Managed Agents sessions, by tagged session ID
-     * (`sesn_...`). Use `group_by[]=session_id` to break out per-session values. Claude Developer
-     * Platform organizations only.
+     * (`sesn_...`). Use `group_by[]=session_id` to break out per-session values. Claude Platform
+     * organizations only.
      */
     fun sessionIds(): Optional<List<String>> = Optional.ofNullable(sessionIds)
 
@@ -258,14 +264,14 @@ private constructor(
     /**
      * Filter to usage attributed to specific user profiles, by tagged user profile ID
      * (`uprof_...`). Use `group_by[]=user_profile_id` to break out per-profile values. Claude
-     * Developer Platform organizations only.
+     * Platform organizations only.
      */
     fun userProfileIds(): Optional<List<String>> = Optional.ofNullable(userProfileIds)
 
     /**
      * Filter to usage in specific workspaces, by tagged workspace ID (`wrkspc_...`). Use
-     * `group_by[]=workspace_id` to break out per-workspace values. Claude Developer Platform
-     * organizations only; matches nothing for a Claude Enterprise organization.
+     * `group_by[]=workspace_id` to break out per-workspace values. Claude Platform organizations
+     * only; matches nothing for a Claude Enterprise organization.
      */
     fun workspaceIds(): Optional<List<String>> = Optional.ofNullable(workspaceIds)
 
@@ -317,6 +323,7 @@ private constructor(
         private var models: MutableList<String>? = null
         private var order: BetaAnalyticsUsageCostSortOrder? = null
         private var orderBy: BetaAnalyticsCostOrderBy? = null
+        private var organizationIds: MutableList<String>? = null
         private var page: String? = null
         private var products: MutableList<BetaAnalyticsUsageCostProductFilter>? = null
         private var rbacGroupIds: MutableList<String>? = null
@@ -351,6 +358,7 @@ private constructor(
             models = costListParams.models?.toMutableList()
             order = costListParams.order
             orderBy = costListParams.orderBy
+            organizationIds = costListParams.organizationIds?.toMutableList()
             page = costListParams.page
             products = costListParams.products?.toMutableList()
             rbacGroupIds = costListParams.rbacGroupIds?.toMutableList()
@@ -417,8 +425,7 @@ private constructor(
 
         /**
          * Filter to usage incurred by sessions of specific Claude Managed Agents agents. Use
-         * `group_by[]=agent_id` to break out per-agent values. Claude Developer Platform
-         * organizations only.
+         * `group_by[]=agent_id` to break out per-agent values. Claude Platform organizations only.
          */
         fun agentIds(agentIds: List<String>?) = apply { this.agentIds = agentIds?.toMutableList() }
 
@@ -438,8 +445,8 @@ private constructor(
          * Filter to usage authenticated by specific API keys, by tagged API key ID (`apikey_...`),
          * whichever identity the usage is attributed to. Include an empty entry (`api_key_ids[]=`)
          * to also match usage that no API key authenticated. Use `group_by[]=api_key_id` to break
-         * out per-key values; usage without a key has a null `api_key_id`. Claude Developer
-         * Platform organizations only.
+         * out per-key values; usage without a key has a null `api_key_id`. Claude Platform
+         * organizations only.
          */
         fun apiKeyIds(apiKeyIds: List<String>?) = apply {
             this.apiKeyIds = apiKeyIds?.toMutableList()
@@ -459,9 +466,8 @@ private constructor(
 
         /**
          * Filter to Claude Tag (Claude in Slack) usage in specific spend categories. Usage with no
-         * category never matches. `dm` usage is reported under the user's product rather than
-         * `claude_tag`, so combining this filter with `products[]=claude_tag` excludes it. Use
-         * `group_by[]=claude_tag_category` to break out per-category values.
+         * category never matches. Use `group_by[]=claude_tag_category` to break out per-category
+         * values.
          */
         fun claudeTagCategories(claudeTagCategories: List<BetaAnalyticsClaudeTagCategory>?) =
             apply {
@@ -532,7 +538,7 @@ private constructor(
         /**
          * Filter to usage incurred by Claude Managed Agents sessions that specific deployments
          * started. Use `group_by[]=deployment_id` to break out per-deployment values. Claude
-         * Developer Platform organizations only.
+         * Platform organizations only.
          */
         fun deploymentIds(deploymentIds: List<String>?) = apply {
             this.deploymentIds = deploymentIds?.toMutableList()
@@ -564,7 +570,7 @@ private constructor(
         /**
          * Filter to usage incurred by Claude Managed Agents sessions that ran in specific
          * environments. Use `group_by[]=environment_id` to break out per-environment values. Claude
-         * Developer Platform organizations only.
+         * Platform organizations only.
          */
         fun environmentIds(environmentIds: List<String>?) = apply {
             this.environmentIds = environmentIds?.toMutableList()
@@ -710,6 +716,29 @@ private constructor(
         /** Alias for calling [Builder.orderBy] with `orderBy.orElse(null)`. */
         fun orderBy(orderBy: Optional<BetaAnalyticsCostOrderBy>) = orderBy(orderBy.getOrNull())
 
+        /**
+         * Filter a parent organization's report to specific child organizations, by organization
+         * UUID or `org_` ID; an ID that is not one of its child organizations matches nothing.
+         * Requires an API key created at the parent organization level. Use
+         * `group_by[]=organization_id` to break out per-organization values.
+         */
+        fun organizationIds(organizationIds: List<String>?) = apply {
+            this.organizationIds = organizationIds?.toMutableList()
+        }
+
+        /** Alias for calling [Builder.organizationIds] with `organizationIds.orElse(null)`. */
+        fun organizationIds(organizationIds: Optional<List<String>>) =
+            organizationIds(organizationIds.getOrNull())
+
+        /**
+         * Adds a single [String] to [organizationIds].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addOrganizationId(organizationId: String) = apply {
+            organizationIds = (organizationIds ?: mutableListOf()).apply { add(organizationId) }
+        }
+
         /** Opaque cursor from a previous response's `next_page` field. */
         fun page(page: String?) = apply { this.page = page }
 
@@ -759,8 +788,8 @@ private constructor(
 
         /**
          * Filter to specific service tiers. Use `group_by[]=service_tier` to break out per-tier
-         * values. Claude Developer Platform organizations only; matches nothing for a Claude
-         * Enterprise organization.
+         * values. Claude Platform organizations only; matches nothing for a Claude Enterprise
+         * organization.
          */
         fun serviceTiers(serviceTiers: List<BetaAnalyticsServiceTier>?) = apply {
             this.serviceTiers = serviceTiers?.toMutableList()
@@ -782,7 +811,7 @@ private constructor(
         /**
          * Filter to usage incurred by specific Claude Managed Agents sessions, by tagged session ID
          * (`sesn_...`). Use `group_by[]=session_id` to break out per-session values. Claude
-         * Developer Platform organizations only.
+         * Platform organizations only.
          */
         fun sessionIds(sessionIds: List<String>?) = apply {
             this.sessionIds = sessionIds?.toMutableList()
@@ -860,7 +889,7 @@ private constructor(
         /**
          * Filter to usage attributed to specific user profiles, by tagged user profile ID
          * (`uprof_...`). Use `group_by[]=user_profile_id` to break out per-profile values. Claude
-         * Developer Platform organizations only.
+         * Platform organizations only.
          */
         fun userProfileIds(userProfileIds: List<String>?) = apply {
             this.userProfileIds = userProfileIds?.toMutableList()
@@ -881,7 +910,7 @@ private constructor(
 
         /**
          * Filter to usage in specific workspaces, by tagged workspace ID (`wrkspc_...`). Use
-         * `group_by[]=workspace_id` to break out per-workspace values. Claude Developer Platform
+         * `group_by[]=workspace_id` to break out per-workspace values. Claude Platform
          * organizations only; matches nothing for a Claude Enterprise organization.
          */
         fun workspaceIds(workspaceIds: List<String>?) = apply {
@@ -1058,6 +1087,7 @@ private constructor(
                 models?.toImmutable(),
                 order,
                 orderBy,
+                organizationIds?.toImmutable(),
                 page,
                 products?.toImmutable(),
                 rbacGroupIds?.toImmutable(),
@@ -1114,6 +1144,7 @@ private constructor(
                 models?.forEach { put("models[]", it) }
                 order?.let { put("order", it.toString()) }
                 orderBy?.let { put("order_by", it.toString()) }
+                organizationIds?.forEach { put("organization_ids[]", it) }
                 page?.let { put("page", it) }
                 products?.forEach { put("products[]", it.toString()) }
                 rbacGroupIds?.forEach { put("rbac_group_ids[]", it) }
@@ -1151,6 +1182,7 @@ private constructor(
                     "models",
                     "order",
                     "order_by",
+                    "organization_ids",
                     "page",
                     "products",
                     "rbac_group_ids",
@@ -1189,6 +1221,7 @@ private constructor(
             models == other.models &&
             order == other.order &&
             orderBy == other.orderBy &&
+            organizationIds == other.organizationIds &&
             page == other.page &&
             products == other.products &&
             rbacGroupIds == other.rbacGroupIds &&
@@ -1224,6 +1257,7 @@ private constructor(
             models,
             order,
             orderBy,
+            organizationIds,
             page,
             products,
             rbacGroupIds,
@@ -1240,5 +1274,5 @@ private constructor(
         )
 
     override fun toString() =
-        "CostListParams{startingAt=$startingAt, actorIds=$actorIds, actorTypes=$actorTypes, agentIds=$agentIds, apiKeyIds=$apiKeyIds, claudeTagCategories=$claudeTagCategories, claudeTagUserIds=$claudeTagUserIds, contextWindows=$contextWindows, deploymentIds=$deploymentIds, endingAt=$endingAt, environmentIds=$environmentIds, excludeDeletedUsers=$excludeDeletedUsers, groupBy=$groupBy, inferenceGeos=$inferenceGeos, limit=$limit, models=$models, order=$order, orderBy=$orderBy, page=$page, products=$products, rbacGroupIds=$rbacGroupIds, serviceTiers=$serviceTiers, sessionIds=$sessionIds, slackChannelIds=$slackChannelIds, speeds=$speeds, timeBucketWidth=$timeBucketWidth, userProfileIds=$userProfileIds, workspaceIds=$workspaceIds, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "CostListParams{startingAt=$startingAt, actorIds=$actorIds, actorTypes=$actorTypes, agentIds=$agentIds, apiKeyIds=$apiKeyIds, claudeTagCategories=$claudeTagCategories, claudeTagUserIds=$claudeTagUserIds, contextWindows=$contextWindows, deploymentIds=$deploymentIds, endingAt=$endingAt, environmentIds=$environmentIds, excludeDeletedUsers=$excludeDeletedUsers, groupBy=$groupBy, inferenceGeos=$inferenceGeos, limit=$limit, models=$models, order=$order, orderBy=$orderBy, organizationIds=$organizationIds, page=$page, products=$products, rbacGroupIds=$rbacGroupIds, serviceTiers=$serviceTiers, sessionIds=$sessionIds, slackChannelIds=$slackChannelIds, speeds=$speeds, timeBucketWidth=$timeBucketWidth, userProfileIds=$userProfileIds, workspaceIds=$workspaceIds, betas=$betas, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

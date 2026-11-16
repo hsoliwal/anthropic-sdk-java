@@ -7,24 +7,20 @@ import com.anthropic.models.beta.BetaCurrency
 import com.anthropic.models.beta.BetaMonetaryAmount
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolset20260401
 import com.anthropic.models.beta.agents.BetaManagedAgentsAgentToolsetDefaultConfig
-import com.anthropic.models.beta.agents.BetaManagedAgentsAlwaysAllowPolicy
 import com.anthropic.models.beta.agents.BetaManagedAgentsAlwaysAskPolicy
 import com.anthropic.models.beta.agents.BetaManagedAgentsAnthropicSkill
-import com.anthropic.models.beta.agents.BetaManagedAgentsBashToolConfig
 import com.anthropic.models.beta.agents.BetaManagedAgentsCustomSkill
 import com.anthropic.models.beta.agents.BetaManagedAgentsEffortLow
 import com.anthropic.models.beta.agents.BetaManagedAgentsMcpServerUrlDefinition
 import com.anthropic.models.beta.agents.BetaManagedAgentsModel
 import com.anthropic.models.beta.agents.BetaManagedAgentsModelConfig
 import com.anthropic.models.beta.agents.BetaManagedAgentsServiceAccountExecutionIdentity
-import com.anthropic.models.beta.agents.BetaManagedAgentsSessionThreadAgent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsBudgetLimit
 import com.anthropic.models.beta.sessions.BetaManagedAgentsCacheCreationUsage
 import com.anthropic.models.beta.sessions.BetaManagedAgentsDeltaContent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsDeltaEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsServerToolUsage
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionAgent
-import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionMultiagentCoordinator
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionUpdatedEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsSessionUsageEvent
 import com.anthropic.models.beta.sessions.BetaManagedAgentsStartEvent
@@ -44,8 +40,7 @@ import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentToolEvalu
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentToolEvaluationAlwaysAllow
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentToolResultEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsAgentToolUseEvent
-import com.anthropic.models.beta.sessions.events.BetaManagedAgentsRepositoryAuthenticationError
-import com.anthropic.models.beta.sessions.events.BetaManagedAgentsRetryStatusRetrying
+import com.anthropic.models.beta.sessions.events.BetaManagedAgentsRetryStatusExhausted
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsSessionDeletedEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsSessionEndTurn
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsSessionErrorEvent
@@ -67,6 +62,7 @@ import com.anthropic.models.beta.sessions.events.BetaManagedAgentsSpanOutcomeEva
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsSpanOutcomeEvaluationOngoingEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsSpanOutcomeEvaluationStartEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsTextBlock
+import com.anthropic.models.beta.sessions.events.BetaManagedAgentsToolUseLimitReachedError
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserCustomToolResultEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserDefineOutcomeEvent
 import com.anthropic.models.beta.sessions.events.BetaManagedAgentsUserInterruptEvent
@@ -1346,12 +1342,11 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
             BetaManagedAgentsSessionErrorEvent.builder()
                 .id("id")
                 .error(
-                    BetaManagedAgentsRepositoryAuthenticationError.builder()
+                    BetaManagedAgentsToolUseLimitReachedError.builder()
                         .message(
-                            "The repository host rejected the credentials for the repository, or required credentials and received none."
+                            "This turn stopped because the agent loop reached its limit of 500 tool-use rounds since the turn started or last resumed. A round is one model response that calls tools, plus running those tools. Nothing failed. Send the session a new message to continue; nothing from the stopped turn is discarded."
                         )
-                        .repositoryUrl("https://github.com/example-org/example-repo")
-                        .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
+                        .retryStatus(BetaManagedAgentsRetryStatusExhausted.builder().build())
                         .build()
                 )
                 .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -1417,12 +1412,11 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 BetaManagedAgentsSessionErrorEvent.builder()
                     .id("id")
                     .error(
-                        BetaManagedAgentsRepositoryAuthenticationError.builder()
+                        BetaManagedAgentsToolUseLimitReachedError.builder()
                             .message(
-                                "The repository host rejected the credentials for the repository, or required credentials and received none."
+                                "This turn stopped because the agent loop reached its limit of 500 tool-use rounds since the turn started or last resumed. A round is one model response that calls tools, plus running those tools. Nothing failed. Send the session a new message to continue; nothing from the stopped turn is discarded."
                             )
-                            .repositoryUrl("https://github.com/example-org/example-repo")
-                            .retryStatus(BetaManagedAgentsRetryStatusRetrying.builder().build())
+                            .retryStatus(BetaManagedAgentsRetryStatusExhausted.builder().build())
                             .build()
                     )
                     .processedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -2616,12 +2610,7 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                 .agentName("Researcher")
                 .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                 .sessionThreadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
-                .stopDetails(
-                    BetaManagedAgentsSessionRefusalStopDetails.builder()
-                        .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
-                        .explanation("explanation")
-                        .build()
-                )
+                .stopDetails(null)
                 .stopReason(BetaManagedAgentsSessionEndTurn.builder().build())
                 .build()
 
@@ -2690,12 +2679,7 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                     .agentName("Researcher")
                     .processedAt(OffsetDateTime.parse("2026-03-15T10:00:00Z"))
                     .sessionThreadId("sthr_011CZkZVWa6oJjw1rgXZpnBt")
-                    .stopDetails(
-                        BetaManagedAgentsSessionRefusalStopDetails.builder()
-                            .category(BetaManagedAgentsSessionRefusalStopDetails.Category.CYBER)
-                            .explanation("explanation")
-                            .build()
-                    )
+                    .stopDetails(null)
                     .stopReason(BetaManagedAgentsSessionEndTurn.builder().build())
                     .build()
             )
@@ -3001,75 +2985,7 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                 .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                 .build()
                         )
-                        .coordinatorMultiagent(
-                            listOf(
-                                BetaManagedAgentsSessionMultiagentCoordinator.Agent.ofAgent(
-                                    BetaManagedAgentsSessionThreadAgent.builder()
-                                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                        .description("A focused research subagent.")
-                                        .executionIdentity(
-                                            BetaManagedAgentsServiceAccountExecutionIdentity
-                                                .builder()
-                                                .build()
-                                        )
-                                        .addMcpServer(
-                                            BetaManagedAgentsMcpServerUrlDefinition.builder()
-                                                .name("example-mcp")
-                                                .url(
-                                                    "https://example-server.modelcontextprotocol.io/sse"
-                                                )
-                                                .build()
-                                        )
-                                        .model(
-                                            BetaManagedAgentsModelConfig.builder()
-                                                .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
-                                                .effort(
-                                                    BetaManagedAgentsEffortLow.builder().build()
-                                                )
-                                                .inferenceGeo("inference_geo")
-                                                .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
-                                                .build()
-                                        )
-                                        .name("Researcher")
-                                        .addSkill(
-                                            BetaManagedAgentsAnthropicSkill.builder()
-                                                .skillId("xlsx")
-                                                .version("1")
-                                                .build()
-                                        )
-                                        .system(
-                                            "You are a research subagent that gathers and summarises sources for the coordinating agent."
-                                        )
-                                        .addTool(
-                                            BetaManagedAgentsAgentToolset20260401.builder()
-                                                .addConfig(
-                                                    BetaManagedAgentsBashToolConfig.builder()
-                                                        .enabled(true)
-                                                        .permissionPolicy(
-                                                            BetaManagedAgentsAlwaysAllowPolicy
-                                                                .builder()
-                                                                .build()
-                                                        )
-                                                        .build()
-                                                )
-                                                .defaultConfig(
-                                                    BetaManagedAgentsAgentToolsetDefaultConfig
-                                                        .builder()
-                                                        .enabled(true)
-                                                        .permissionPolicy(
-                                                            BetaManagedAgentsAlwaysAskPolicy
-                                                                .builder()
-                                                                .build()
-                                                        )
-                                                        .build()
-                                                )
-                                                .build()
-                                        )
-                                        .version(1)
-                                        .build()
-                                )
-                            )
-                        )
+                        .multiagent(null)
                         .name("My First Agent")
                         .addSkill(
                             BetaManagedAgentsAnthropicSkill.builder()
@@ -3088,14 +3004,7 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                         )
                         .addTool(
                             BetaManagedAgentsAgentToolset20260401.builder()
-                                .addConfig(
-                                    BetaManagedAgentsBashToolConfig.builder()
-                                        .enabled(true)
-                                        .permissionPolicy(
-                                            BetaManagedAgentsAlwaysAllowPolicy.builder().build()
-                                        )
-                                        .build()
-                                )
+                                .configs(listOf())
                                 .defaultConfig(
                                     BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                         .enabled(true)
@@ -3207,77 +3116,7 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                                     .speed(BetaManagedAgentsModelConfig.Speed.STANDARD)
                                     .build()
                             )
-                            .coordinatorMultiagent(
-                                listOf(
-                                    BetaManagedAgentsSessionMultiagentCoordinator.Agent.ofAgent(
-                                        BetaManagedAgentsSessionThreadAgent.builder()
-                                            .id("agent_011CZkYqphY8vELVzwCUpqiQ")
-                                            .description("A focused research subagent.")
-                                            .executionIdentity(
-                                                BetaManagedAgentsServiceAccountExecutionIdentity
-                                                    .builder()
-                                                    .build()
-                                            )
-                                            .addMcpServer(
-                                                BetaManagedAgentsMcpServerUrlDefinition.builder()
-                                                    .name("example-mcp")
-                                                    .url(
-                                                        "https://example-server.modelcontextprotocol.io/sse"
-                                                    )
-                                                    .build()
-                                            )
-                                            .model(
-                                                BetaManagedAgentsModelConfig.builder()
-                                                    .id(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
-                                                    .effort(
-                                                        BetaManagedAgentsEffortLow.builder().build()
-                                                    )
-                                                    .inferenceGeo("inference_geo")
-                                                    .speed(
-                                                        BetaManagedAgentsModelConfig.Speed.STANDARD
-                                                    )
-                                                    .build()
-                                            )
-                                            .name("Researcher")
-                                            .addSkill(
-                                                BetaManagedAgentsAnthropicSkill.builder()
-                                                    .skillId("xlsx")
-                                                    .version("1")
-                                                    .build()
-                                            )
-                                            .system(
-                                                "You are a research subagent that gathers and summarises sources for the coordinating agent."
-                                            )
-                                            .addTool(
-                                                BetaManagedAgentsAgentToolset20260401.builder()
-                                                    .addConfig(
-                                                        BetaManagedAgentsBashToolConfig.builder()
-                                                            .enabled(true)
-                                                            .permissionPolicy(
-                                                                BetaManagedAgentsAlwaysAllowPolicy
-                                                                    .builder()
-                                                                    .build()
-                                                            )
-                                                            .build()
-                                                    )
-                                                    .defaultConfig(
-                                                        BetaManagedAgentsAgentToolsetDefaultConfig
-                                                            .builder()
-                                                            .enabled(true)
-                                                            .permissionPolicy(
-                                                                BetaManagedAgentsAlwaysAskPolicy
-                                                                    .builder()
-                                                                    .build()
-                                                            )
-                                                            .build()
-                                                    )
-                                                    .build()
-                                            )
-                                            .version(1)
-                                            .build()
-                                    )
-                                )
-                            )
+                            .multiagent(null)
                             .name("My First Agent")
                             .addSkill(
                                 BetaManagedAgentsAnthropicSkill.builder()
@@ -3296,14 +3135,7 @@ internal class BetaManagedAgentsStreamSessionThreadEventsTest {
                             )
                             .addTool(
                                 BetaManagedAgentsAgentToolset20260401.builder()
-                                    .addConfig(
-                                        BetaManagedAgentsBashToolConfig.builder()
-                                            .enabled(true)
-                                            .permissionPolicy(
-                                                BetaManagedAgentsAlwaysAllowPolicy.builder().build()
-                                            )
-                                            .build()
-                                    )
+                                    .configs(listOf())
                                     .defaultConfig(
                                         BetaManagedAgentsAgentToolsetDefaultConfig.builder()
                                             .enabled(true)

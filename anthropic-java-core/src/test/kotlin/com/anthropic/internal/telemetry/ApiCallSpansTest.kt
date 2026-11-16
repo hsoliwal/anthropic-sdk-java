@@ -13,11 +13,14 @@ import com.anthropic.core.http.HttpMethod
 import com.anthropic.core.http.HttpRequest
 import com.anthropic.core.http.parseable
 import com.anthropic.core.opentelemetry.ApiCall
+import com.anthropic.core.opentelemetry.ApiCallClient
 import com.anthropic.core.opentelemetry.OpenTelemetryContentMode
 import com.anthropic.core.opentelemetry.OpenTelemetryOptions
 import com.anthropic.core.opentelemetry.OpenTelemetryRequestOptions
 import com.anthropic.core.opentelemetry.OpenTelemetryTraces
+import com.anthropic.core.opentelemetry.thenParse
 import com.anthropic.core.opentelemetry.traceApiCall
+import com.anthropic.core.opentelemetry.traceApiCallAsync
 import com.anthropic.errors.AnthropicException
 import com.anthropic.errors.AnthropicIoException
 import com.anthropic.errors.InternalServerException
@@ -25,6 +28,7 @@ import com.anthropic.errors.RateLimitException
 import com.anthropic.helpers.FakeHttpClient
 import com.anthropic.models.beta.messages.BetaJsonOutputFormat
 import com.anthropic.models.beta.messages.BetaOutputConfig
+import com.anthropic.models.beta.messages.BetaThinkingConfigBetweenTools
 import com.anthropic.models.beta.messages.MessageCountTokensParams as BetaMessageCountTokensParams
 import com.anthropic.models.beta.messages.MessageCreateParams as BetaMessageCreateParams
 import com.anthropic.models.beta.messages.batches.BatchCreateParams as BetaBatchCreateParams
@@ -32,6 +36,7 @@ import com.anthropic.models.messages.JsonOutputFormat
 import com.anthropic.models.messages.MessageCountTokensParams
 import com.anthropic.models.messages.MessageCreateParams
 import com.anthropic.models.messages.OutputConfig
+import com.anthropic.models.messages.ThinkingConfigBetweenTools
 import com.anthropic.models.messages.batches.BatchCreateParams
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.anyUrl
@@ -214,6 +219,55 @@ internal class ApiCallSpansTest : TracingTestSupport() {
         }
         assertThat(stable.strings("anthropic.beta")).containsExactly("client-beta")
         assertThat(beta.strings("anthropic.beta")).containsExactly("params-beta")
+    }
+
+    @Test
+    fun messagesCreate_withThinkingBetweenTools_recordsTheThinkingType() {
+        stubMessage()
+
+        client
+            .messages()
+            .create(
+                messageParams()
+                    .toBuilder()
+                    .thinking(ThinkingConfigBetweenTools.builder().build())
+                    .build()
+            )
+        client
+            .beta()
+            .messages()
+            .create(
+                betaMessageParams()
+                    .toBuilder()
+                    .thinking(BetaThinkingConfigBetweenTools.builder().build())
+                    .build()
+            )
+
+        assertThat(recorder.spans).hasSize(2).allSatisfy { span ->
+            assertThat(span.string("anthropic.thinking.type")).isEqualTo("between_tools")
+            assertThat(span.long("anthropic.thinking.budget_tokens")).isNull()
+        }
+    }
+
+    @Test
+    fun messagesCreateStreaming_recordsTheResponseHeaders() {
+        stubFor(
+            post(urlPathEqualTo("/v1/messages"))
+                .willReturn(
+                    ok(STREAM_BODY)
+                        .withHeader("Content-Type", "text/event-stream")
+                        .withHeader("request-id", "req_1")
+                        .withHeader("anthropic-organization-id", "org_1")
+                        .withHeader("anthropic-workspace-id", "wrkspc_1")
+                )
+        )
+
+        client.messages().createStreaming(messageParams()).use { it.stream().forEach {} }
+
+        val span = recorder.only()
+        assertThat(span.string("anthropic.request.id")).isEqualTo("req_1")
+        assertThat(span.string("anthropic.organization.id")).isEqualTo("org_1")
+        assertThat(span.string("anthropic.workspace.id")).isEqualTo("wrkspc_1")
     }
 
     @Test
@@ -1643,9 +1697,49 @@ internal class ApiCallSpansTest : TracingTestSupport() {
         val client = asyncClient()
 
         val future = client.messages().create(messageParams())
-        Thread.sleep(200)
+        // Canceling the future doesn't stop the HTTP request, so one that reaches the server after
+        // this test ends is counted by the next test, fromEnv_appliesThePropagationSystemProperty.
+        val sent = postRequestedFor(urlPathEqualTo("/v1/messages"))
+        val deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(10)
+        while (findAll(sent).isEmpty() && System.nanoTime() < deadline) {
+            Thread.sleep(10)
+        }
+        assertThat(findAll(sent)).hasSize(1)
         future.cancel(true)
         assertThrows<CancellationException> { future.get() }
+
+        val span = recorder.await(1).single()
+        assertThat(span.status.statusCode).isEqualTo(StatusCode.UNSET)
+        assertThat(span.string("error.type")).isNull()
+    }
+
+    @Test
+    fun asyncCallCanceledBeforeItsSpanStarts_leavesStatusUnset() {
+        val clientOptions =
+            ClientOptions.builder()
+                .httpClient(FakeHttpClient("{}"))
+                .openTelemetry(options())
+                .build()
+        val request =
+            HttpRequest.builder().method(HttpMethod.POST).baseUrl("http://localhost").build()
+        val prepared = CompletableFuture<HttpRequest>()
+        lateinit var apiCallClient: ApiCallClient
+
+        // Not `messages().create`, whose span starts before its request is sent.
+        val future =
+            traceApiCallAsync(clientOptions, messageParams()) { client ->
+                    apiCallClient = client
+                    prepared
+                        .thenCompose { client.executeAsync(it, RequestOptions.none()) }
+                        .thenApply { response -> response.parseable { "parsed" } }
+                }
+                .thenParse()
+        future.cancel(true)
+        assertThrows<CancellationException> { future.get() }
+        assertThat(apiCallClient.call).isNull()
+
+        // Canceling does not stop the send, so the span starts after the future was canceled.
+        prepared.complete(request)
 
         val span = recorder.await(1).single()
         assertThat(span.status.statusCode).isEqualTo(StatusCode.UNSET)

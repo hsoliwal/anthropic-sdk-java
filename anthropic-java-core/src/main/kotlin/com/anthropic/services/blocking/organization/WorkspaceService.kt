@@ -36,7 +36,17 @@ interface WorkspaceService {
 
     fun serviceAccounts(): ServiceAccountService
 
-    /** Create Workspace */
+    /**
+     * Create Workspace
+     *
+     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyValidationFailedException
+     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyValidationTimedOutException
+     * @throws com.anthropic.models.organization.workspaces.KeyProfileMismatchException
+     * @throws com.anthropic.models.userprofiles.UserProfileNotFoundException
+     * @throws com.anthropic.models.organization.workspaces.WorkspacePolicyViolationException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
+     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyChangedException
+     */
     fun create(params: WorkspaceCreateParams): Workspace = create(params, RequestOptions.none())
 
     /** @see create */
@@ -76,7 +86,17 @@ interface WorkspaceService {
     fun retrieve(workspaceId: String, requestOptions: RequestOptions): Workspace =
         retrieve(workspaceId, WorkspaceRetrieveParams.none(), requestOptions)
 
-    /** Update Workspace */
+    /**
+     * Update Workspace
+     *
+     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyValidationFailedException
+     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyValidationTimedOutException
+     * @throws com.anthropic.models.organization.workspaces.KeyProfileMismatchException
+     * @throws com.anthropic.models.userprofiles.UserProfileNotFoundException
+     * @throws com.anthropic.models.organization.workspaces.WorkspacePolicyViolationException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
+     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyChangedException
+     */
     fun update(workspaceId: String): Workspace = update(workspaceId, WorkspaceUpdateParams.none())
 
     /** @see update */
@@ -122,7 +142,11 @@ interface WorkspaceService {
     fun list(requestOptions: RequestOptions): WorkspaceListPage =
         list(WorkspaceListParams.none(), requestOptions)
 
-    /** Archive Workspace */
+    /**
+     * Archive Workspace
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
+     */
     fun archive(workspaceId: String): Workspace =
         archive(workspaceId, WorkspaceArchiveParams.none())
 

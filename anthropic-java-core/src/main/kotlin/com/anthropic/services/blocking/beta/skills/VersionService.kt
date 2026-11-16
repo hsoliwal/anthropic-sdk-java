@@ -29,7 +29,15 @@ interface VersionService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): VersionService
 
-    /** Create Skill Version */
+    /**
+     * Create Skill Version
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.CmekKeyDisabledException
+     * @throws com.anthropic.models.CmekKeyNetworkBlockedException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     * @throws com.anthropic.models.CmekContextUnavailableException
+     */
     fun create(skillId: String, params: VersionCreateParams): BetaSkillVersion =
         create(skillId, params, RequestOptions.none())
 
@@ -50,7 +58,12 @@ interface VersionService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaSkillVersion
 
-    /** Get Skill Version */
+    /**
+     * Get Skill Version
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun retrieve(version: String, params: VersionRetrieveParams): BetaSkillVersion =
         retrieve(version, params, RequestOptions.none())
 
@@ -71,7 +84,12 @@ interface VersionService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BetaSkillVersion
 
-    /** List Skill Versions */
+    /**
+     * List Skill Versions
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun list(skillId: String): VersionListPage = list(skillId, VersionListParams.none())
 
     /** @see list */
@@ -100,7 +118,12 @@ interface VersionService {
     fun list(skillId: String, requestOptions: RequestOptions): VersionListPage =
         list(skillId, VersionListParams.none(), requestOptions)
 
-    /** Delete Skill Version */
+    /**
+     * Delete Skill Version
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun delete(version: String, params: VersionDeleteParams): BetaDeletedSkillVersion =
         delete(version, params, RequestOptions.none())
 

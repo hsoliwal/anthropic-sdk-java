@@ -30,6 +30,14 @@ interface BundleServiceAsync {
     /**
      * Get one Bundle. What the Bundle grants (connectors, repositories and credentials) is never
      * returned.
+     *
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
      */
     fun retrieve(bundleId: String): CompletableFuture<BetaClaudeTagBundle> =
         retrieve(bundleId, BundleRetrieveParams.none())
@@ -68,6 +76,14 @@ interface BundleServiceAsync {
     /**
      * List the organization's Bundles, newest first by `created_at`. A Bundle that Claude Tag
      * manages for itself is not listed.
+     *
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
      */
     fun list(): CompletableFuture<BundleListPageAsync> = list(BundleListParams.none())
 

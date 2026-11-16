@@ -30,7 +30,15 @@ interface SkillServiceAsync {
 
     fun versions(): VersionServiceAsync
 
-    /** Create Skill */
+    /**
+     * Create Skill
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.CmekKeyDisabledException
+     * @throws com.anthropic.models.CmekKeyNetworkBlockedException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     * @throws com.anthropic.models.CmekContextUnavailableException
+     */
     fun create(params: SkillCreateParams): CompletableFuture<Skill> =
         create(params, RequestOptions.none())
 
@@ -40,7 +48,12 @@ interface SkillServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Skill>
 
-    /** Get Skill */
+    /**
+     * Get Skill
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun retrieve(skillId: String): CompletableFuture<Skill> =
         retrieve(skillId, SkillRetrieveParams.none())
 
@@ -72,7 +85,12 @@ interface SkillServiceAsync {
     fun retrieve(skillId: String, requestOptions: RequestOptions): CompletableFuture<Skill> =
         retrieve(skillId, SkillRetrieveParams.none(), requestOptions)
 
-    /** List Skills */
+    /**
+     * List Skills
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun list(): CompletableFuture<SkillListPageAsync> = list(SkillListParams.none())
 
     /** @see list */
@@ -90,7 +108,12 @@ interface SkillServiceAsync {
     fun list(requestOptions: RequestOptions): CompletableFuture<SkillListPageAsync> =
         list(SkillListParams.none(), requestOptions)
 
-    /** Delete Skill */
+    /**
+     * Delete Skill
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     */
     fun delete(skillId: String): CompletableFuture<DeletedSkill> =
         delete(skillId, SkillDeleteParams.none())
 

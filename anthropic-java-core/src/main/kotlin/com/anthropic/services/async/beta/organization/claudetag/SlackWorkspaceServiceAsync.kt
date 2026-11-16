@@ -32,6 +32,14 @@ interface SlackWorkspaceServiceAsync {
      * organization's Slack defaults are taken into account, and the request fails with 503 rather
      * than resolve against a settings level that could not be read. Either way `sources` names the
      * settings level each value comes from.
+     *
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
      */
     fun retrieve(id: String): CompletableFuture<BetaClaudeTagSlackWorkspace> =
         retrieve(id, SlackWorkspaceRetrieveParams.none())
@@ -72,6 +80,19 @@ interface SlackWorkspaceServiceAsync {
      * Change the settings a Slack workspace stores. The update is partial: a setting left out is
      * unchanged, and a setting sent as null is cleared, so the workspace inherits it. If any value
      * is refused, no setting in the request is stored.
+     *
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
+     * @throws com.anthropic.models.beta.environments.BetaEnvironmentNotFoundException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpEnvironmentNotFoundException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaSlackChannelSetUpSettingsConflictException
      */
     fun update(
         id: String,
@@ -104,6 +125,14 @@ interface SlackWorkspaceServiceAsync {
      * workspace's `settings` holds what applies in it, and the request fails with 503 rather than
      * resolve against a settings level that could not be read. A `page` cursor resumes only a
      * request with the same `include_inherited`.
+     *
+     * @throws com.anthropic.models.beta.organization.claudetag.BetaApiKeyScopeMissingException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaClaudeTagWritesNotEnabledException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaComplianceConfigurationRestrictedException
+     * @throws
+     *   com.anthropic.models.beta.organization.claudetag.BetaOrganizationLevelScopedApiKeyRequiredException
      */
     fun list(): CompletableFuture<SlackWorkspaceListPageAsync> =
         list(SlackWorkspaceListParams.none())

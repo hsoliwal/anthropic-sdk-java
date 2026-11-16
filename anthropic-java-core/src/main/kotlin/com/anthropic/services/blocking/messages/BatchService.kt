@@ -40,6 +40,11 @@ interface BatchService {
      *
      * Learn more about the Message Batches API in our
      * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.CmekKeyDisabledException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     * @throws com.anthropic.models.EnforcedSpendLimitReachedException
      */
     fun create(params: BatchCreateParams): MessageBatch = create(params, RequestOptions.none())
 
@@ -55,6 +60,9 @@ interface BatchService {
      *
      * Learn more about the Message Batches API in our
      * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
      */
     fun retrieve(messageBatchId: String): MessageBatch =
         retrieve(messageBatchId, BatchRetrieveParams.none())
@@ -93,6 +101,9 @@ interface BatchService {
      *
      * Learn more about the Message Batches API in our
      * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
      */
     fun list(): BatchListPage = list(BatchListParams.none())
 
@@ -118,6 +129,9 @@ interface BatchService {
      *
      * Learn more about the Message Batches API in our
      * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
      */
     fun delete(messageBatchId: String): DeletedMessageBatch =
         delete(messageBatchId, BatchDeleteParams.none())
@@ -161,6 +175,9 @@ interface BatchService {
      *
      * Learn more about the Message Batches API in our
      * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
      */
     fun cancel(messageBatchId: String): MessageBatch =
         cancel(messageBatchId, BatchCancelParams.none())
@@ -201,6 +218,10 @@ interface BatchService {
      *
      * Learn more about the Message Batches API in our
      * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.CmekKeyDisabledException
+     * @throws com.anthropic.models.OrganizationOnHoldException
      */
     @MustBeClosed
     fun resultsStreaming(messageBatchId: String): StreamResponse<MessageBatchIndividualResponse> =

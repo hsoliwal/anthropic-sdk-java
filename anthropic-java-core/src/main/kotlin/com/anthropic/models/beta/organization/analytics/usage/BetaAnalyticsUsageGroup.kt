@@ -44,6 +44,7 @@ private constructor(
     private val environmentId: JsonField<String>,
     private val inferenceGeo: JsonField<BetaAnalyticsUsageCostInferenceGeo>,
     private val model: JsonField<String>,
+    private val organizationId: JsonField<String>,
     private val product: JsonField<String>,
     private val rbacGroupId: JsonField<String>,
     private val serviceTier: JsonField<BetaAnalyticsServiceTier>,
@@ -84,6 +85,9 @@ private constructor(
         @ExcludeMissing
         inferenceGeo: JsonField<BetaAnalyticsUsageCostInferenceGeo> = JsonMissing.of(),
         @JsonProperty("model") @ExcludeMissing model: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("organization_id")
+        @ExcludeMissing
+        organizationId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("product") @ExcludeMissing product: JsonField<String> = JsonMissing.of(),
         @JsonProperty("rbac_group_id")
         @ExcludeMissing
@@ -116,6 +120,7 @@ private constructor(
         environmentId,
         inferenceGeo,
         model,
+        organizationId,
         product,
         rbacGroupId,
         serviceTier,
@@ -172,9 +177,7 @@ private constructor(
      * channel or thread), `proactive` (Claude responded without being addressed), `scheduled` (a
      * scheduled routine ran), `monitoring` (Claude watching a channel it was asked to monitor), or
      * `dm` (direct messages with Claude). Populated only when `claude_tag_category` is in
-     * `group_by[]`; null for usage that is not Claude Tag. Direct-message usage is billed to the
-     * individual user and is reported under that user's product, not under `claude_tag`. New
-     * categories may be added over time.
+     * `group_by[]`; null for usage that is not Claude Tag. New categories may be added over time.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -248,14 +251,23 @@ private constructor(
     fun model(): Optional<String> = model.getOptional("model")
 
     /**
+     * UUID of the child organization the usage belongs to, on a parent organization's report across
+     * its children. Null unless `organization_id` is in `group_by[]`.
+     *
+     * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun organizationId(): Optional<String> = organizationId.getOptional("organization_id")
+
+    /**
      * Product surface that produced the usage or cost. Null unless product is in `group_by[]`; it
      * can also be null on grouped rows whose usage cannot be attributed to a known surface. Values
      * include `chat`, `claude_code`, `cowork`, `office_agent`, `claude_in_chrome`, `claude_design`,
      * `claude_tag`, and `chat_cowork_unified`. `claude_tag` is Claude Tag, the Claude product in
      * Slack. `chat_cowork_unified` is Chat and Cowork unified, Cowork's features inside claude.ai
      * chat: chat and Cowork usage by a member who has it turned on is reported under this value
-     * instead of `chat` or `cowork`. It is accepted as a filter only on deployments that offer Chat
-     * and Cowork unified. Some unattributed usage is reported as "other".
+     * instead of `chat` or `cowork`. It is accepted as a filter only where Chat and Cowork unified
+     * is available. Some unattributed usage is reported as "other".
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -297,8 +309,8 @@ private constructor(
 
     /**
      * Slack channel the usage originated from. Populated only when `slack_channel_id` is in
-     * `group_by[]`; null for usage outside Slack (and for rows recorded before channel attribution
-     * was enabled).
+     * `group_by[]`; null for usage outside Slack, for some Claude Tag usage that has no channel
+     * recorded, and for usage recorded before channel attribution was enabled.
      *
      * @throws AnthropicInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -427,6 +439,15 @@ private constructor(
     @JsonProperty("model") @ExcludeMissing fun _model(): JsonField<String> = model
 
     /**
+     * Returns the raw JSON value of [organizationId].
+     *
+     * Unlike [organizationId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("organization_id")
+    @ExcludeMissing
+    fun _organizationId(): JsonField<String> = organizationId
+
+    /**
      * Returns the raw JSON value of [product].
      *
      * Unlike [product], this method doesn't throw if the JSON field has an unexpected type.
@@ -522,6 +543,7 @@ private constructor(
          * .environmentId()
          * .inferenceGeo()
          * .model()
+         * .organizationId()
          * .product()
          * .rbacGroupId()
          * .serviceTier()
@@ -549,6 +571,7 @@ private constructor(
         private var environmentId: JsonField<String>? = null
         private var inferenceGeo: JsonField<BetaAnalyticsUsageCostInferenceGeo>? = null
         private var model: JsonField<String>? = null
+        private var organizationId: JsonField<String>? = null
         private var product: JsonField<String>? = null
         private var rbacGroupId: JsonField<String>? = null
         private var serviceTier: JsonField<BetaAnalyticsServiceTier>? = null
@@ -572,6 +595,7 @@ private constructor(
             environmentId = betaAnalyticsUsageGroup.environmentId
             inferenceGeo = betaAnalyticsUsageGroup.inferenceGeo
             model = betaAnalyticsUsageGroup.model
+            organizationId = betaAnalyticsUsageGroup.organizationId
             product = betaAnalyticsUsageGroup.product
             rbacGroupId = betaAnalyticsUsageGroup.rbacGroupId
             serviceTier = betaAnalyticsUsageGroup.serviceTier
@@ -707,9 +731,8 @@ private constructor(
          * channel or thread), `proactive` (Claude responded without being addressed), `scheduled`
          * (a scheduled routine ran), `monitoring` (Claude watching a channel it was asked to
          * monitor), or `dm` (direct messages with Claude). Populated only when
-         * `claude_tag_category` is in `group_by[]`; null for usage that is not Claude Tag.
-         * Direct-message usage is billed to the individual user and is reported under that user's
-         * product, not under `claude_tag`. New categories may be added over time.
+         * `claude_tag_category` is in `group_by[]`; null for usage that is not Claude Tag. New
+         * categories may be added over time.
          */
         fun claudeTagCategory(claudeTagCategory: BetaAnalyticsClaudeTagCategory?) =
             claudeTagCategory(JsonField.ofNullable(claudeTagCategory))
@@ -865,6 +888,28 @@ private constructor(
         fun model(model: JsonField<String>) = apply { this.model = model }
 
         /**
+         * UUID of the child organization the usage belongs to, on a parent organization's report
+         * across its children. Null unless `organization_id` is in `group_by[]`.
+         */
+        fun organizationId(organizationId: String?) =
+            organizationId(JsonField.ofNullable(organizationId))
+
+        /** Alias for calling [Builder.organizationId] with `organizationId.orElse(null)`. */
+        fun organizationId(organizationId: Optional<String>) =
+            organizationId(organizationId.getOrNull())
+
+        /**
+         * Sets [Builder.organizationId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.organizationId] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun organizationId(organizationId: JsonField<String>) = apply {
+            this.organizationId = organizationId
+        }
+
+        /**
          * Product surface that produced the usage or cost. Null unless product is in `group_by[]`;
          * it can also be null on grouped rows whose usage cannot be attributed to a known surface.
          * Values include `chat`, `claude_code`, `cowork`, `office_agent`, `claude_in_chrome`,
@@ -872,7 +917,7 @@ private constructor(
          * Claude product in Slack. `chat_cowork_unified` is Chat and Cowork unified, Cowork's
          * features inside claude.ai chat: chat and Cowork usage by a member who has it turned on is
          * reported under this value instead of `chat` or `cowork`. It is accepted as a filter only
-         * on deployments that offer Chat and Cowork unified. Some unattributed usage is reported as
+         * where Chat and Cowork unified is available. Some unattributed usage is reported as
          * "other".
          */
         fun product(product: String?) = product(JsonField.ofNullable(product))
@@ -955,8 +1000,8 @@ private constructor(
 
         /**
          * Slack channel the usage originated from. Populated only when `slack_channel_id` is in
-         * `group_by[]`; null for usage outside Slack (and for rows recorded before channel
-         * attribution was enabled).
+         * `group_by[]`; null for usage outside Slack, for some Claude Tag usage that has no channel
+         * recorded, and for usage recorded before channel attribution was enabled.
          */
         fun slackChannelId(slackChannelId: String?) =
             slackChannelId(JsonField.ofNullable(slackChannelId))
@@ -1073,6 +1118,7 @@ private constructor(
          * .environmentId()
          * .inferenceGeo()
          * .model()
+         * .organizationId()
          * .product()
          * .rbacGroupId()
          * .serviceTier()
@@ -1098,6 +1144,7 @@ private constructor(
                 checkRequired("environmentId", environmentId),
                 checkRequired("inferenceGeo", inferenceGeo),
                 checkRequired("model", model),
+                checkRequired("organizationId", organizationId),
                 checkRequired("product", product),
                 checkRequired("rbacGroupId", rbacGroupId),
                 checkRequired("serviceTier", serviceTier),
@@ -1136,6 +1183,7 @@ private constructor(
         environmentId()
         inferenceGeo().ifPresent { it.validate() }
         model()
+        organizationId()
         product()
         rbacGroupId()
         serviceTier().ifPresent { it.validate() }
@@ -1173,6 +1221,7 @@ private constructor(
             (if (environmentId.asKnown().isPresent) 1 else 0) +
             (inferenceGeo.asKnown().getOrNull()?.validity() ?: 0) +
             (if (model.asKnown().isPresent) 1 else 0) +
+            (if (organizationId.asKnown().isPresent) 1 else 0) +
             (if (product.asKnown().isPresent) 1 else 0) +
             (if (rbacGroupId.asKnown().isPresent) 1 else 0) +
             (serviceTier.asKnown().getOrNull()?.validity() ?: 0) +
@@ -1199,6 +1248,7 @@ private constructor(
             environmentId == other.environmentId &&
             inferenceGeo == other.inferenceGeo &&
             model == other.model &&
+            organizationId == other.organizationId &&
             product == other.product &&
             rbacGroupId == other.rbacGroupId &&
             serviceTier == other.serviceTier &&
@@ -1223,6 +1273,7 @@ private constructor(
             environmentId,
             inferenceGeo,
             model,
+            organizationId,
             product,
             rbacGroupId,
             serviceTier,
@@ -1238,5 +1289,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BetaAnalyticsUsageGroup{actor=$actor, actorType=$actorType, agentId=$agentId, apiKeyId=$apiKeyId, claudeTagCategory=$claudeTagCategory, claudeTagUserId=$claudeTagUserId, contextWindow=$contextWindow, deploymentId=$deploymentId, environmentId=$environmentId, inferenceGeo=$inferenceGeo, model=$model, product=$product, rbacGroupId=$rbacGroupId, serviceTier=$serviceTier, sessionId=$sessionId, slackChannelId=$slackChannelId, speed=$speed, userProfileId=$userProfileId, workspaceId=$workspaceId, additionalProperties=$additionalProperties}"
+        "BetaAnalyticsUsageGroup{actor=$actor, actorType=$actorType, agentId=$agentId, apiKeyId=$apiKeyId, claudeTagCategory=$claudeTagCategory, claudeTagUserId=$claudeTagUserId, contextWindow=$contextWindow, deploymentId=$deploymentId, environmentId=$environmentId, inferenceGeo=$inferenceGeo, model=$model, organizationId=$organizationId, product=$product, rbacGroupId=$rbacGroupId, serviceTier=$serviceTier, sessionId=$sessionId, slackChannelId=$slackChannelId, speed=$speed, userProfileId=$userProfileId, workspaceId=$workspaceId, additionalProperties=$additionalProperties}"
 }

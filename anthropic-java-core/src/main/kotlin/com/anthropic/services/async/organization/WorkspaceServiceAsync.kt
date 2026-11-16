@@ -36,7 +36,17 @@ interface WorkspaceServiceAsync {
 
     fun serviceAccounts(): ServiceAccountServiceAsync
 
-    /** Create Workspace */
+    /**
+     * Create Workspace
+     *
+     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyValidationFailedException
+     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyValidationTimedOutException
+     * @throws com.anthropic.models.organization.workspaces.KeyProfileMismatchException
+     * @throws com.anthropic.models.userprofiles.UserProfileNotFoundException
+     * @throws com.anthropic.models.organization.workspaces.WorkspacePolicyViolationException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
+     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyChangedException
+     */
     fun create(params: WorkspaceCreateParams): CompletableFuture<Workspace> =
         create(params, RequestOptions.none())
 
@@ -81,7 +91,17 @@ interface WorkspaceServiceAsync {
     ): CompletableFuture<Workspace> =
         retrieve(workspaceId, WorkspaceRetrieveParams.none(), requestOptions)
 
-    /** Update Workspace */
+    /**
+     * Update Workspace
+     *
+     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyValidationFailedException
+     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyValidationTimedOutException
+     * @throws com.anthropic.models.organization.workspaces.KeyProfileMismatchException
+     * @throws com.anthropic.models.userprofiles.UserProfileNotFoundException
+     * @throws com.anthropic.models.organization.workspaces.WorkspacePolicyViolationException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
+     * @throws com.anthropic.models.organization.externalkeys.ExternalKeyChangedException
+     */
     fun update(workspaceId: String): CompletableFuture<Workspace> =
         update(workspaceId, WorkspaceUpdateParams.none())
 
@@ -131,7 +151,11 @@ interface WorkspaceServiceAsync {
     fun list(requestOptions: RequestOptions): CompletableFuture<WorkspaceListPageAsync> =
         list(WorkspaceListParams.none(), requestOptions)
 
-    /** Archive Workspace */
+    /**
+     * Archive Workspace
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
+     */
     fun archive(workspaceId: String): CompletableFuture<Workspace> =
         archive(workspaceId, WorkspaceArchiveParams.none())
 

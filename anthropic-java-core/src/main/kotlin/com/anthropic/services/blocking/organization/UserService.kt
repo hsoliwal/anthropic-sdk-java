@@ -57,7 +57,11 @@ interface UserService {
     fun retrieve(userId: String, requestOptions: RequestOptions): OrganizationUser =
         retrieve(userId, UserRetrieveParams.none(), requestOptions)
 
-    /** Update a member's organization role. */
+    /**
+     * Update a member's organization role.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
+     */
     fun update(userId: String, params: UserUpdateParams): OrganizationUser =
         update(userId, params, RequestOptions.none())
 
@@ -94,7 +98,13 @@ interface UserService {
     fun list(requestOptions: RequestOptions): UserListPage =
         list(UserListParams.none(), requestOptions)
 
-    /** Remove a member from the organization. */
+    /**
+     * Remove a member from the organization.
+     *
+     * @throws com.anthropic.models.organization.users.CannotRemoveLastMemberException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
+     * @throws com.anthropic.models.organization.ConcurrentMembershipChangeException
+     */
     fun remove(userId: String): UserRemoveResponse = remove(userId, UserRemoveParams.none())
 
     /** @see remove */

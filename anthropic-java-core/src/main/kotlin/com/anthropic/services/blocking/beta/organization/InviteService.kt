@@ -33,6 +33,16 @@ interface InviteService {
      * On plans that draw members from a finite pool of purchased seats, the invite automatically
      * consumes a seat from the lowest tier with availability; there is no seat-tier parameter. When
      * no seat is free the request fails with a 400 error rather than purchasing a seat.
+     *
+     * @throws com.anthropic.models.organization.invites.AlreadyMemberException
+     * @throws
+     *   com.anthropic.models.organization.invites.CannotInviteEmailsWithUnverifiedDomainsException
+     * @throws com.anthropic.models.organization.invites.EmailDomainNotAllowedException
+     * @throws com.anthropic.models.organization.invites.InviteAlreadyExistsException
+     * @throws com.anthropic.models.organization.OrgMemberLimitExceededException
+     * @throws com.anthropic.models.organization.rbacgroups.RbacGroupGrantsOwnerAccessException
+     * @throws com.anthropic.models.organization.rbacgroups.RbacGroupOwnerAccessUnconfirmedException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun create(params: InviteCreateParams): BetaOrganizationInvite =
         create(params, RequestOptions.none())
@@ -92,7 +102,11 @@ interface InviteService {
     fun list(requestOptions: RequestOptions): InviteListPage =
         list(InviteListParams.none(), requestOptions)
 
-    /** Delete a pending invite. */
+    /**
+     * Delete a pending invite.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
+     */
     fun delete(inviteId: String): InviteDeleteResponse = delete(inviteId, InviteDeleteParams.none())
 
     /** @see delete */

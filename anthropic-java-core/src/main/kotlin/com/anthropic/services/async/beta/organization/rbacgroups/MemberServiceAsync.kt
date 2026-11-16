@@ -3,12 +3,12 @@ package com.anthropic.services.async.beta.organization.rbacgroups
 import com.anthropic.core.ClientOptions
 import com.anthropic.core.RequestOptions
 import com.anthropic.core.http.HttpResponseFor
+import com.anthropic.models.beta.organization.rbacgroups.members.BetaDeletedRbacGroupMember
 import com.anthropic.models.beta.organization.rbacgroups.members.BetaRbacGroupMember
 import com.anthropic.models.beta.organization.rbacgroups.members.MemberAddParams
 import com.anthropic.models.beta.organization.rbacgroups.members.MemberListPageAsync
 import com.anthropic.models.beta.organization.rbacgroups.members.MemberListParams
 import com.anthropic.models.beta.organization.rbacgroups.members.MemberRemoveParams
-import com.anthropic.models.beta.organization.rbacgroups.members.MemberRemoveResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -71,6 +71,10 @@ interface MemberServiceAsync {
      * provisioning.
      *
      * The RBAC Groups API is available to Claude Enterprise organizations only.
+     *
+     * @throws com.anthropic.models.organization.rbacgroups.RbacGroupGrantsOwnerAccessException
+     * @throws com.anthropic.models.organization.rbacgroups.RbacGroupOwnerAccessUnconfirmedException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun add(rbacGroupId: String, params: MemberAddParams): CompletableFuture<BetaRbacGroupMember> =
         add(rbacGroupId, params, RequestOptions.none())
@@ -99,29 +103,33 @@ interface MemberServiceAsync {
      * uses SCIM provisioning.
      *
      * The RBAC Groups API is available to Claude Enterprise organizations only.
+     *
+     * @throws com.anthropic.models.organization.rbacgroups.RbacGroupGrantsOwnerAccessException
+     * @throws com.anthropic.models.organization.rbacgroups.RbacGroupOwnerAccessUnconfirmedException
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun remove(
         userId: String,
         params: MemberRemoveParams,
-    ): CompletableFuture<MemberRemoveResponse> = remove(userId, params, RequestOptions.none())
+    ): CompletableFuture<BetaDeletedRbacGroupMember> = remove(userId, params, RequestOptions.none())
 
     /** @see remove */
     fun remove(
         userId: String,
         params: MemberRemoveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<MemberRemoveResponse> =
+    ): CompletableFuture<BetaDeletedRbacGroupMember> =
         remove(params.toBuilder().userId(userId).build(), requestOptions)
 
     /** @see remove */
-    fun remove(params: MemberRemoveParams): CompletableFuture<MemberRemoveResponse> =
+    fun remove(params: MemberRemoveParams): CompletableFuture<BetaDeletedRbacGroupMember> =
         remove(params, RequestOptions.none())
 
     /** @see remove */
     fun remove(
         params: MemberRemoveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<MemberRemoveResponse>
+    ): CompletableFuture<BetaDeletedRbacGroupMember>
 
     /**
      * A view of [MemberServiceAsync] that provides access to raw HTTP responses for each method.
@@ -216,7 +224,7 @@ interface MemberServiceAsync {
         fun remove(
             userId: String,
             params: MemberRemoveParams,
-        ): CompletableFuture<HttpResponseFor<MemberRemoveResponse>> =
+        ): CompletableFuture<HttpResponseFor<BetaDeletedRbacGroupMember>> =
             remove(userId, params, RequestOptions.none())
 
         /** @see remove */
@@ -224,19 +232,19 @@ interface MemberServiceAsync {
             userId: String,
             params: MemberRemoveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<MemberRemoveResponse>> =
+        ): CompletableFuture<HttpResponseFor<BetaDeletedRbacGroupMember>> =
             remove(params.toBuilder().userId(userId).build(), requestOptions)
 
         /** @see remove */
         fun remove(
             params: MemberRemoveParams
-        ): CompletableFuture<HttpResponseFor<MemberRemoveResponse>> =
+        ): CompletableFuture<HttpResponseFor<BetaDeletedRbacGroupMember>> =
             remove(params, RequestOptions.none())
 
         /** @see remove */
         fun remove(
             params: MemberRemoveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<MemberRemoveResponse>>
+        ): CompletableFuture<HttpResponseFor<BetaDeletedRbacGroupMember>>
     }
 }

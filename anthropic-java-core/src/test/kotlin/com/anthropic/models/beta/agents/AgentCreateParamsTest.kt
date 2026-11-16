@@ -3,8 +3,8 @@ package com.anthropic.models.beta.agents
 import com.anthropic.core.JsonValue
 import com.anthropic.core.http.Headers
 import com.anthropic.models.beta.AnthropicBeta
+import com.anthropic.models.beta.sessions.BetaManagedAgentsAgentParams
 import com.anthropic.models.beta.sessions.BetaManagedAgentsMultiagentParams
-import com.anthropic.models.beta.sessions.BetaManagedAgentsMultiagentRosterEntryParams
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -19,7 +19,7 @@ internal class AgentCreateParamsTest {
             .model(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
             .name("My First Agent")
             .description("A general-purpose starter agent.")
-            .awsRoleExecutionIdentity("role_arn")
+            .awsRoleExecutionIdentity("arn:aws:iam::228601553692:role/T")
             .addMcpServer(
                 BetaManagedAgentsUrlMcpServerParams.builder()
                     .name("example-mcp")
@@ -31,15 +31,33 @@ internal class AgentCreateParamsTest {
                     .putAdditionalProperty("foo", JsonValue.from("bar"))
                     .build()
             )
-            .coordinatorMultiagent(
-                listOf(
-                    BetaManagedAgentsMultiagentRosterEntryParams.ofString(
-                        "agent_011CZkYqphY8vELVzwCUpqiQ"
-                    ),
-                    BetaManagedAgentsMultiagentRosterEntryParams.ofSelf(
-                        BetaManagedAgentsMultiagentSelfParams.builder().build()
-                    ),
-                )
+            .multiagent(
+                BetaManagedAgentsMultiagent20261001Params.builder()
+                    .advisor(BetaManagedAgentsMultiagentAdvisorDisabledParams.builder().build())
+                    .subagents(
+                        BetaManagedAgentsMultiagentSubagentsEnabledParams.builder()
+                            .inlineAgents(
+                                BetaManagedAgentsMultiagentInlineAgentsDisabledParams.builder()
+                                    .build()
+                            )
+                            .addPredefinedAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
+                            .build()
+                    )
+                    .workflows(
+                        BetaManagedAgentsMultiagentWorkflowsEnabledParams.builder()
+                            .inlineAgents(
+                                BetaManagedAgentsMultiagentInlineAgentsDisabledParams.builder()
+                                    .build()
+                            )
+                            .addPredefinedAgent(
+                                BetaManagedAgentsAgentParams.builder()
+                                    .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                    .version(1)
+                                    .build()
+                            )
+                            .build()
+                    )
+                    .build()
             )
             .addSkill(
                 BetaManagedAgentsAnthropicSkillParams.builder().skillId("xlsx").version("1").build()
@@ -76,7 +94,7 @@ internal class AgentCreateParamsTest {
                 .model(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                 .name("My First Agent")
                 .description("A general-purpose starter agent.")
-                .awsRoleExecutionIdentity("role_arn")
+                .awsRoleExecutionIdentity("arn:aws:iam::228601553692:role/T")
                 .addMcpServer(
                     BetaManagedAgentsUrlMcpServerParams.builder()
                         .name("example-mcp")
@@ -88,15 +106,33 @@ internal class AgentCreateParamsTest {
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
-                .coordinatorMultiagent(
-                    listOf(
-                        BetaManagedAgentsMultiagentRosterEntryParams.ofString(
-                            "agent_011CZkYqphY8vELVzwCUpqiQ"
-                        ),
-                        BetaManagedAgentsMultiagentRosterEntryParams.ofSelf(
-                            BetaManagedAgentsMultiagentSelfParams.builder().build()
-                        ),
-                    )
+                .multiagent(
+                    BetaManagedAgentsMultiagent20261001Params.builder()
+                        .advisor(BetaManagedAgentsMultiagentAdvisorDisabledParams.builder().build())
+                        .subagents(
+                            BetaManagedAgentsMultiagentSubagentsEnabledParams.builder()
+                                .inlineAgents(
+                                    BetaManagedAgentsMultiagentInlineAgentsDisabledParams.builder()
+                                        .build()
+                                )
+                                .addPredefinedAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                .build()
+                        )
+                        .workflows(
+                            BetaManagedAgentsMultiagentWorkflowsEnabledParams.builder()
+                                .inlineAgents(
+                                    BetaManagedAgentsMultiagentInlineAgentsDisabledParams.builder()
+                                        .build()
+                                )
+                                .addPredefinedAgent(
+                                    BetaManagedAgentsAgentParams.builder()
+                                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                        .version(1)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .build()
                 )
                 .addSkill(
                     BetaManagedAgentsAnthropicSkillParams.builder()
@@ -167,7 +203,7 @@ internal class AgentCreateParamsTest {
                 .model(BetaManagedAgentsModel.CLAUDE_OPUS_5_5)
                 .name("My First Agent")
                 .description("A general-purpose starter agent.")
-                .awsRoleExecutionIdentity("role_arn")
+                .awsRoleExecutionIdentity("arn:aws:iam::228601553692:role/T")
                 .addMcpServer(
                     BetaManagedAgentsUrlMcpServerParams.builder()
                         .name("example-mcp")
@@ -179,15 +215,33 @@ internal class AgentCreateParamsTest {
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
-                .coordinatorMultiagent(
-                    listOf(
-                        BetaManagedAgentsMultiagentRosterEntryParams.ofString(
-                            "agent_011CZkYqphY8vELVzwCUpqiQ"
-                        ),
-                        BetaManagedAgentsMultiagentRosterEntryParams.ofSelf(
-                            BetaManagedAgentsMultiagentSelfParams.builder().build()
-                        ),
-                    )
+                .multiagent(
+                    BetaManagedAgentsMultiagent20261001Params.builder()
+                        .advisor(BetaManagedAgentsMultiagentAdvisorDisabledParams.builder().build())
+                        .subagents(
+                            BetaManagedAgentsMultiagentSubagentsEnabledParams.builder()
+                                .inlineAgents(
+                                    BetaManagedAgentsMultiagentInlineAgentsDisabledParams.builder()
+                                        .build()
+                                )
+                                .addPredefinedAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                .build()
+                        )
+                        .workflows(
+                            BetaManagedAgentsMultiagentWorkflowsEnabledParams.builder()
+                                .inlineAgents(
+                                    BetaManagedAgentsMultiagentInlineAgentsDisabledParams.builder()
+                                        .build()
+                                )
+                                .addPredefinedAgent(
+                                    BetaManagedAgentsAgentParams.builder()
+                                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                        .version(1)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .build()
                 )
                 .addSkill(
                     BetaManagedAgentsAnthropicSkillParams.builder()
@@ -230,7 +284,11 @@ internal class AgentCreateParamsTest {
         assertThat(body.name()).isEqualTo("My First Agent")
         assertThat(body.description()).contains("A general-purpose starter agent.")
         assertThat(body.executionIdentity())
-            .contains(BetaManagedAgentsExecutionIdentityParams.ofAwsRole("role_arn"))
+            .contains(
+                BetaManagedAgentsExecutionIdentityParams.ofAwsRole(
+                    "arn:aws:iam::228601553692:role/T"
+                )
+            )
         assertThat(body.mcpServers().getOrNull())
             .containsExactly(
                 BetaManagedAgentsUrlMcpServerParams.builder()
@@ -246,10 +304,32 @@ internal class AgentCreateParamsTest {
             )
         assertThat(body.multiagent())
             .contains(
-                BetaManagedAgentsMultiagentParams.ofCoordinator(
-                    BetaManagedAgentsMultiagentCoordinatorParams.builder()
-                        .addAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
-                        .addAgent(BetaManagedAgentsMultiagentSelfParams.builder().build())
+                BetaManagedAgentsMultiagentParams.ofMultiagent20261001(
+                    BetaManagedAgentsMultiagent20261001Params.builder()
+                        .advisor(BetaManagedAgentsMultiagentAdvisorDisabledParams.builder().build())
+                        .subagents(
+                            BetaManagedAgentsMultiagentSubagentsEnabledParams.builder()
+                                .inlineAgents(
+                                    BetaManagedAgentsMultiagentInlineAgentsDisabledParams.builder()
+                                        .build()
+                                )
+                                .addPredefinedAgent("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                .build()
+                        )
+                        .workflows(
+                            BetaManagedAgentsMultiagentWorkflowsEnabledParams.builder()
+                                .inlineAgents(
+                                    BetaManagedAgentsMultiagentInlineAgentsDisabledParams.builder()
+                                        .build()
+                                )
+                                .addPredefinedAgent(
+                                    BetaManagedAgentsAgentParams.builder()
+                                        .id("agent_011CZkYqphY8vELVzwCUpqiQ")
+                                        .version(1)
+                                        .build()
+                                )
+                                .build()
+                        )
                         .build()
                 )
             )

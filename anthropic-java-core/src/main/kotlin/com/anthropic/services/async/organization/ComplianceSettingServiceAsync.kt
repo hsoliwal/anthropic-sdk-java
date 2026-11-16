@@ -55,7 +55,9 @@ interface ComplianceSettingServiceAsync {
      * Update your organization's Compliance Settings.
      *
      * Setting `state` to `enabled` turns on the Compliance API and begins capturing organization
-     * activity events. Setting it to `disabled` turns both off. `state` reflects whether the
+     * activity events. Setting it to `disabled` turns both off. Access Transparency events are an
+     * exception: they are still captured while the Compliance API is disabled, and the Compliance
+     * API activity feed returns them once it is enabled again. `state` reflects whether the
      * Compliance API is enabled.
      *
      * A request that sets `state` to its current value succeeds and leaves the resource unchanged.
@@ -64,6 +66,8 @@ interface ComplianceSettingServiceAsync {
      * enables the Compliance API, which serves its activity events, so such provisioning (including
      * re-runs) re-enables the Compliance API even after a `disabled` request. Automated
      * provisioning never disables compliance settings.
+     *
+     * @throws com.anthropic.models.SandboxEgressRestrictedException
      */
     fun update(
         params: ComplianceSettingUpdateParams

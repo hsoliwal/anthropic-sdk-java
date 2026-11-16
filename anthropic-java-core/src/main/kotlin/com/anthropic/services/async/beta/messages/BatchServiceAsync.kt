@@ -42,6 +42,11 @@ interface BatchServiceAsync {
      *
      * Learn more about the Message Batches API in our
      * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.CmekKeyDisabledException
+     * @throws com.anthropic.models.OrganizationOnHoldException
+     * @throws com.anthropic.models.EnforcedSpendLimitReachedException
      */
     fun create(params: BatchCreateParams): CompletableFuture<BetaMessageBatch> =
         create(params, RequestOptions.none())
@@ -58,6 +63,9 @@ interface BatchServiceAsync {
      *
      * Learn more about the Message Batches API in our
      * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
      */
     fun retrieve(messageBatchId: String): CompletableFuture<BetaMessageBatch> =
         retrieve(messageBatchId, BatchRetrieveParams.none())
@@ -99,6 +107,9 @@ interface BatchServiceAsync {
      *
      * Learn more about the Message Batches API in our
      * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
      */
     fun list(): CompletableFuture<BatchListPageAsync> = list(BatchListParams.none())
 
@@ -125,6 +136,9 @@ interface BatchServiceAsync {
      *
      * Learn more about the Message Batches API in our
      * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
      */
     fun delete(messageBatchId: String): CompletableFuture<BetaDeletedMessageBatch> =
         delete(messageBatchId, BatchDeleteParams.none())
@@ -172,6 +186,9 @@ interface BatchServiceAsync {
      *
      * Learn more about the Message Batches API in our
      * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.OrganizationOnHoldException
      */
     fun cancel(messageBatchId: String): CompletableFuture<BetaMessageBatch> =
         cancel(messageBatchId, BatchCancelParams.none())
@@ -216,6 +233,10 @@ interface BatchServiceAsync {
      *
      * Learn more about the Message Batches API in our
      * [user guide](https://platform.claude.com/docs/en/build-with-claude/batch-processing)
+     *
+     * @throws com.anthropic.models.ClaudeCodeKeyCreatorNotMemberException
+     * @throws com.anthropic.models.CmekKeyDisabledException
+     * @throws com.anthropic.models.OrganizationOnHoldException
      */
     fun resultsStreaming(
         messageBatchId: String
